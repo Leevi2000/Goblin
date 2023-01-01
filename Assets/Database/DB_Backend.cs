@@ -3,20 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mono.Data.Sqlite;
 using System.IO;
-
+using Goblin;
+using System.Data;
 
 namespace Database.Backend
 {
-   public class DB_Backend : MonoBehaviour
+   public class DB_Backend
     {
         // For storing the data of 'run-time' goblins.
-        private string _GoblinDB = "URI=file:Goblins.db";
+        private string _GoblinDB = "URI=file:DatabaseData/Goblins.db";
 
-        private void Start()
-        {
-            DropGoblins();
-            //InitializeDatabases();
-        }
+     
 
 
         public bool InitializeDatabases()
@@ -28,7 +25,9 @@ namespace Database.Backend
             // Creates goblins table
             GoblinDBCreateTables.Add(
                 "CREATE TABLE IF NOT EXISTS goblins (" +
-                "id INTEGER NOT NULL PRIMARY KEY)");
+                "id INTEGER NOT NULL PRIMARY KEY, " +
+                "first_name varchar(50), " +
+                "last_name varchar(50))");
 
             // Creates relation table
             GoblinDBCreateTables.Add(
@@ -93,9 +92,7 @@ namespace Database.Backend
                 "age INTEGER NOT NULL, " +
                 "working BOOL, " +
                 "doing_activity BOOL, " +
-                "first_name varchar(50), " +
-                "last_name varchar(50), " +
-                "gender varchar(10)" +
+                "gender varchar(10), " +
                 "FOREIGN KEY(goblin_Id) REFERENCES goblins(id) " +
                 "ON DELETE CASCADE ON UPDATE NO ACTION)");
 
@@ -104,6 +101,51 @@ namespace Database.Backend
             {
                 CreateDB(_GoblinDB, item);
             }
+
+            return success;
+        }
+
+        public bool SaveGoblin(Goblin.Goblin goblin)
+        {
+            bool success = false;
+            int id = 99;
+            if(goblin.GoblinId == 0)
+            {
+                string command1 = $"INSERT INTO goblins (first_name, last_name) VALUES ('{goblin.FirstName}', '{goblin.LastName}')";
+                using (var connection = new SqliteConnection(_GoblinDB))
+                {
+                    connection.Open();
+                    using (var sqlCommand = connection.CreateCommand())
+                    {
+                        sqlCommand.CommandText = "SELECT id from goblins ORDER BY id DESC limit 1";
+                        SqliteDataAdapter adapter = new SqliteDataAdapter("SELECT id from goblins ORDER BY id DESC limit 1", connection);
+
+                        DataTable table = new DataTable();
+                        adapter.Fill(table);
+
+                        foreach (DataRow row in table.Rows)
+                        {
+                            goblin.GoblinId = int.Parse(row[0].ToString());
+                            break;
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+            if (goblin.GoblinId != 0)
+            {
+
+            }
+
+            //string command = $""
+
+
+
+            //using (var connection = new SqliteConnection(_GoblinDB))
+            //{
+            //    ExecuteCommand(connection, command);
+            //}
+
 
             return success;
         }
@@ -124,18 +166,13 @@ namespace Database.Backend
             return false;
         }
 
+        /// <summary>
+        /// Destroys the entire goblin database.
+        /// </summary>
         private void DropGoblins()
         {
-
-            File.Delete(_GoblinDB);
-            using (var connection = new SqliteConnection(_GoblinDB))
-            {
-                connection.Open();
-                ExecuteCommand(connection,
-                    "select 'drop table ' || name || ';' from sqlite_master" +
-                    "where type = 'table'");
-                connection.Close();
-            }
+            string path = Application.dataPath.Replace("/Assets", "/DatabaseData") + "/Goblins.db";
+            if (File.Exists(path)) { File.Delete(path); }
         }
 
         private bool ExecuteCommand(SqliteConnection connection, string command)
