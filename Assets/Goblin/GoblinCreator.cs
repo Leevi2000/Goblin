@@ -7,14 +7,20 @@ namespace Goblin.Creator
 {
     public class GoblinCreator : MonoBehaviour
     {
-        Database.Communicator.DatabaseCommunicator dbCommunicator;
+        Database.Communicator.DatabaseCommunicator dbCommunicator = new Database.Communicator.DatabaseCommunicator();
 
         // Start is called before the first frame update
         void Start()
         {
-            
-            Database.Communicator.DatabaseCommunicator dbCommunicator = new Database.Communicator.DatabaseCommunicator();
+            // When the script is attached to unity gameobject, check integrity of tables.
             dbCommunicator.InitializeDatabases();
+        }
+
+        /// <summary>
+        /// Spawns new random goblin, with default stats.
+        /// </summary>
+        public void SpawnRandomGoblin()
+        {
             dbCommunicator.SaveGoblin(CreateDefaultGoblin());
         }
 
@@ -74,8 +80,20 @@ namespace Goblin.Creator
 
         private Goblin GenerateName(Goblin goblin)
         {
-            goblin.FirstName = "Markku";
-            goblin.LastName = "McGyver";
+            Names nameGen = new Names();
+
+            if(goblin.Gender == "Male")
+            {
+                goblin.FirstName = nameGen.RandomMale();
+            }
+            else if(goblin.Gender == "Female")
+            {
+                goblin.FirstName = nameGen.RandomFemale();
+            }
+
+            goblin.LastName = nameGen.RandomLast();
+            
+           
             return goblin;
         }
 

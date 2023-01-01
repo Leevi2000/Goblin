@@ -107,34 +107,55 @@ namespace Database.Backend
 
         public bool SaveGoblin(Goblin.Goblin goblin)
         {
+    
             bool success = false;
-            int id = 99;
+
+            // If goblin has no id, it is then a new one. This part is used to get the 'new' id.
             if(goblin.GoblinId == 0)
             {
-                string command1 = $"INSERT INTO goblins (first_name, last_name) VALUES ('{goblin.FirstName}', '{goblin.LastName}')";
                 using (var connection = new SqliteConnection(_GoblinDB))
                 {
                     connection.Open();
                     using (var sqlCommand = connection.CreateCommand())
                     {
-                        sqlCommand.CommandText = "SELECT id from goblins ORDER BY id DESC limit 1";
+                        // Used to get the currently highest id, used to identify newly created goblin's id.
                         SqliteDataAdapter adapter = new SqliteDataAdapter("SELECT id from goblins ORDER BY id DESC limit 1", connection);
 
+                        // Use a datatable to read data from sql request
                         DataTable table = new DataTable();
                         adapter.Fill(table);
 
+                        // Get the first result at the first column (id)
                         foreach (DataRow row in table.Rows)
                         {
-                            goblin.GoblinId = int.Parse(row[0].ToString());
+                            goblin.GoblinId = int.Parse(row[0].ToString()) + 1;
                             break;
                         }
-                        connection.Close();
                     }
+                    connection.Close();
                 }
             }
+
+
+            // SQL statement for each 'table'
+            string goblinTable = $"INSERT INTO goblins (first_name, last_name) VALUES ('{goblin.FirstName}', '{goblin.LastName}')";
+
+            string detailsTable = $"INSERT INTO details (goblin_id, living, reason_of_death, profession, age, working, doing_activity, gender) " +
+                $"VALUES ('{goblin.GoblinId}', '{goblin.Living}', '{goblin.ReasonOfDeath}', '{goblin.Profession}', '{goblin.Age}', '{goblin.Working}', '{goblin.DoingActivity}', '{goblin.Gender}')";
+
+            string emotionTable = $"INSERT INTO emotions (goblin_id, sadness, happiness, fear, anger, surprise, disgust) " +
+                $"VALUES ('{goblin.GoblinId}', '{goblin.Sadness}', '{goblin.Happiness}', '{goblin.Fear}', '{goblin.Anger}', '{goblin.Surprise}', '{goblin.Disgust}')";
+
+            string statTable = $"INSERT INTO stats (goblin_id, hp, strength, defense, tiredness, hunger, cleanliness, sanity, sickness) " +
+                $"VALUES ('{goblin.GoblinId}', '{goblin.Hp}', '{goblin.Strength}', '{goblin.Defense}', '{goblin.Tiredness}', '{goblin.Hunger}', '{goblin.Cleanliness}', '{goblin.Sanity}', '{goblin.Sickness}')";
+
+
             if (goblin.GoblinId != 0)
             {
-
+                ExecuteCommand(goblinTable);
+                ExecuteCommand(detailsTable);
+                ExecuteCommand(emotionTable);
+                ExecuteCommand(statTable);
             }
 
             //string command = $""
@@ -148,6 +169,60 @@ namespace Database.Backend
 
 
             return success;
+        }
+
+        public Goblin.Goblin LoadGoblin(int goblinId)
+        {
+            Goblin.Goblin goblin = new Goblin.Goblin();
+
+
+            string fetchCmd = $"SELECT * FROM goblins LEFT JOIN details ON goblins.id=details.goblin_id LEFT JOIN stats ON goblins.id=stats.goblin_id LEFT JOIN emotions ON goblins.id=emotions.goblin_Id WHERE goblins.id={goblinId}";
+
+
+            using (var connection = new SqliteConnection(_GoblinDB))
+            {
+                connection.Open();
+                using (var sqlCommand = connection.CreateCommand())
+                {
+                    // 
+                    SqliteDataAdapter adapter = new SqliteDataAdapter(fetchCmd, connection);
+
+                    // Use a datatable to read data from sql request
+                    DataTable table = new DataTable();
+                    adapter.Fill(table);
+
+                    // Assign row values to goblin object
+                    foreach (DataRow row in table.Rows)
+                    {
+                        goblin.FirstName = row["first_name"].ToString();
+                        goblin.LastName = row["last_name"].ToString();
+                        goblin.Living = bool.Parse(row["living"].ToString());
+                        goblin.ReasonOfDeath = row["reason_of_death"].ToString();
+                        goblin.Profession = row["profession"].ToString();
+                        goblin.Age = int.Parse(row["age"].ToString());
+                        goblin.Working = bool.Parse(row["working"].ToString());
+                        goblin.DoingActivity = bool.Parse(row["doing_activity"].ToString());
+                        goblin.Gender = row["gender"].ToString();
+                        goblin.Hp = int.Parse(row["hp"].ToString());
+                        goblin.Strength = int.Parse(row["strength"].ToString());
+                        goblin.Defense = int.Parse(row["defense"].ToString());
+                        goblin.Tiredness = int.Parse(row["tiredness"].ToString());
+                        goblin.Hunger = int.Parse(row["hunger"].ToString());
+                        goblin.Cleanliness = int.Parse(row["cleanliness"].ToString());
+                        goblin.Sanity = int.Parse(row["sanity"].ToString());
+                        goblin.Sickness = int.Parse(row["sickness"].ToString());
+                        goblin.Sadness = int.Parse(row["sadness"].ToString());
+                        goblin.Happiness = int.Parse(row["happiness"].ToString());
+                        goblin.Fear = int.Parse(row["fear"].ToString());
+                        goblin.Anger = int.Parse(row["anger"].ToString());
+                        goblin.Surprise = int.Parse(row["surprise"].ToString());
+                        goblin.Disgust = int.Parse(row["disgust"].ToString());
+                        break;
+                    }
+                }
+                
+            }
+            return goblin;
         }
 
 
@@ -185,6 +260,24 @@ namespace Database.Backend
                 success = true;
             }
 
+            return success;
+        }
+
+        private bool ExecuteCommand(string command)
+        {
+            bool success = false;
+
+            using (var connection = new SqliteConnection(_GoblinDB))
+            {
+                connection.Open();
+                using (var sqlCommand = connection.CreateCommand())
+                {
+                    sqlCommand.CommandText = command;
+                    sqlCommand.ExecuteNonQuery();
+                    success = true;
+                }
+                connection.Close();
+            }
             return success;
         }
     }

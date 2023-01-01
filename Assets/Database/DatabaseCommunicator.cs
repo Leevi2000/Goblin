@@ -26,6 +26,11 @@ namespace Database.Communicator
             goblinData.InitializeDatabases();
         }
 
+        public Goblin.Goblin LoadGoblin(int goblinId)
+        {
+            return goblinData.LoadGoblin(goblinId);
+        }
+
 
         // Update is called once per frame
         void Update()

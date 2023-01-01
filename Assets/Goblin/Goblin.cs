@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace Goblin
 {
-    public class Goblin
+    public class Goblin 
     {
+  
+
+
+        [SerializeField]
         int goblinId;
 
         // Emotions
@@ -26,6 +30,7 @@ namespace Goblin
         int sanity;
         int sickness;
 
+        
         bool living;
         string reasonOfDeath;
         string profession;
@@ -34,7 +39,9 @@ namespace Goblin
         bool hostile;
 
         int age;
+        [SerializeField]
         string firstName;
+        [SerializeField]
         string lastName;
         string gender;
 
