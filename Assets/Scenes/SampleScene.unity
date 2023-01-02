@@ -382,7 +382,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -797, y: -350.5}
+  m_AnchoredPosition: {x: 28, y: -4}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &637062778
@@ -652,7 +652,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Generate Goblin
+  m_Text: 'Load goblin
+
+'
 --- !u!222 &739408645
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -766,7 +768,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -797, y: -350.5}
+  m_AnchoredPosition: {x: 28, y: -39}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1520686736
@@ -813,9 +815,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 436577176}
-        m_TargetAssemblyTypeName: Goblin.Creator.GoblinCreator, Assembly-CSharp
-        m_MethodName: SpawnRandomGoblin
+      - m_Target: {fileID: 436577178}
+        m_TargetAssemblyTypeName: GoblinLoader, Assembly-CSharp
+        m_MethodName: LoadGoblin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
