@@ -6,12 +6,12 @@ public class GoblinLoader : MonoBehaviour
 {
     Database.Communicator.DatabaseCommunicator dbCommunicator = new Database.Communicator.DatabaseCommunicator();
     public GameObject testGoblin;
-    Goblin.Goblin goblin = new Goblin.Goblin();
+    Goblin.Goblin goblin;
 
     // Start is called before the first frame update
     void Start()
     {
-        goblin = testGoblin.GetComponent<Goblin.Goblin>();
+        
     }
 
     // Update is called once per frame
@@ -22,6 +22,6 @@ public class GoblinLoader : MonoBehaviour
 
     public void LoadGoblin()
     {
-        goblin = dbCommunicator.LoadGoblin(9);
+        testGoblin.GetComponent<GoblinLoadTester>().UpdateGoblinData(dbCommunicator.LoadGoblin(9).InfoSender());
     }
 }

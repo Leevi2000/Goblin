@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace Goblin
 {
-    public class Goblin 
+   
+    public class Goblin
     {
+
+
+        [SerializeField]
         int goblinId;
 
         // Emotions
@@ -34,11 +38,13 @@ namespace Goblin
         bool hostile;
 
         int age;
+        [SerializeField]
         string firstName;
+        [SerializeField]
         string lastName;
         string gender;
 
-        int durrentTaskId;
+        int currentTaskId;
 
         public Goblin()
         {
@@ -70,7 +76,15 @@ namespace Goblin
         public string FirstName { get => firstName; set => firstName = value; }
         public string LastName { get => lastName; set => lastName = value; }
         public string Gender { get => gender; set => gender = value; }
-        public int DurrentTaskId { get => durrentTaskId; set => durrentTaskId = value; }
+        public int CurrentTaskId { get => currentTaskId; set => currentTaskId = value; }
+
+        public Goblin InfoSender()
+        {
+            Goblin goblin = new Goblin();
+            goblin.firstName = firstName;
+            goblin.lastName = lastName;
+            return goblin;
+        }
     }
 }
 

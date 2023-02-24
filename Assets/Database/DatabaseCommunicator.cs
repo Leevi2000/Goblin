@@ -9,12 +9,6 @@ namespace Database.Communicator
     {
         DB_Backend goblinData = new DB_Backend();
 
-        // Start is called before the first frame update
-        void Start()
-        {
-            
-        }
-
 
         public void SaveGoblin(Goblin.Goblin goblin)
         {
@@ -32,11 +26,6 @@ namespace Database.Communicator
         }
 
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 }
 
