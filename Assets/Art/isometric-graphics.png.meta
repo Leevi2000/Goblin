@@ -105,7 +105,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: isometric-graphics_0
+      name: Grass
       rect:
         serializedVersion: 2
         x: 15
@@ -126,7 +126,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: isometric-graphics_1
+      name: GrassSlab
       rect:
         serializedVersion: 2
         x: 49
@@ -147,7 +147,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: isometric-graphics_2
+      name: Water
       rect:
         serializedVersion: 2
         x: 83
@@ -168,7 +168,28 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileIndicator
+      name: Tree1
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 143
+        width: 44
+        height: 64
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb5bc37dfd04791408bb115c0e1e1e01
+      internalID: 2077222578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TileIndicator
       rect:
         serializedVersion: 2
         x: 117
@@ -182,20 +203,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3764ffb80f8b9bb44b57477744430cb2
-      internalID: -528668217
+      spriteID: 145ab67f89bd60d4e9ef2ca127663b7e
+      internalID: -401447951
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: isometric-graphics_5
+      name: Goblin
       rect:
         serializedVersion: 2
-        x: 78
-        y: 143
-        width: 43
-        height: 64
+        x: 13
+        y: 144
+        width: 38
+        height: 29
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -203,8 +224,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb5bc37dfd04791408bb115c0e1e1e01
-      internalID: 2077222578
+      spriteID: 89aa334969e7cbf40aa285c39c97f87c
+      internalID: 1968528082
       vertices: []
       indices: 
       edges: []
@@ -220,13 +241,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      isometric-graphics_6: 1968528082
-      isometric-graphics_2: 717272357
-      isometric-graphics_0: -2055529715
-      isometric-graphics_1: 1139393036
-      tileIndicator: -528668217
+      Water: 717272357
+      isometric-graphics_7: 1758431680
+      GrassSlab: 1139393036
+      Grass: -2055529715
+      Goblin: 1968528082
+      TileIndicator: -401447951
+      Tree1: 2077222578
       isometric-graphics_4: -463595873
-      isometric-graphics_5: 2077222578
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
