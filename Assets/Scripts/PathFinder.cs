@@ -29,6 +29,7 @@ public class PathFinder
 
             foreach (var neighbour in neighbourTiles)
             {
+           
                 if(neighbour.isBlocked || closedList.Contains(neighbour) || Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
                 {
                     continue;

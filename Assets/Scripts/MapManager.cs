@@ -44,12 +44,26 @@ public class MapManager : MonoBehaviour
                     var tileKey = new Vector2Int(x, y);
                     if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
+                        // Make logic for isBlocked based on tile name
+                        var dbg = tileMap.GetTile(tileLocation).name;
+
+
+
+
+
+
                         var overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
                         var cellWorldPosition = tileMap.GetCellCenterWorld(tileLocation);
 
                         overlayTile.transform.position = new Vector3(cellWorldPosition.x, cellWorldPosition.y, cellWorldPosition.z+1);
                         overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
                         overlayTile.gridLocation = tileLocation;
+
+                        if (dbg == "tree_1")
+                        {
+                            overlayTile.isBlocked = true;
+                        }
+
                         map.Add(tileKey, overlayTile);
                     }
                 }
