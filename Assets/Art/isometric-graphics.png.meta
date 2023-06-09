@@ -217,8 +217,8 @@ TextureImporter:
         y: 144
         width: 38
         height: 29
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: -0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -226,6 +226,27 @@ TextureImporter:
       bones: []
       spriteID: 89aa334969e7cbf40aa285c39c97f87c
       internalID: 1968528082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cursor
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 207
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: acdd12f1785979b41a0f4913053968db
+      internalID: -405532944
       vertices: []
       indices: 
       edges: []
@@ -242,6 +263,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Water: 717272357
+      Cursor: -405532944
       isometric-graphics_7: 1758431680
       GrassSlab: 1139393036
       Grass: -2055529715
