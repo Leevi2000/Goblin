@@ -190,35 +190,33 @@ namespace Database.Backend
                     // Use a datatable to read data from sql request
                     DataTable table = new DataTable();
                     adapter.Fill(table);
+                    DataRow row = table.Rows[0];
 
-                    // Assign row values to goblin object
-                    foreach (DataRow row in table.Rows)
-                    {
-                        goblin.FirstName = row["first_name"].ToString();
-                        goblin.LastName = row["last_name"].ToString();
-                        goblin.Living = bool.Parse(row["living"].ToString());
-                        goblin.ReasonOfDeath = row["reason_of_death"].ToString();
-                        goblin.Profession = row["profession"].ToString();
-                        goblin.Age = int.Parse(row["age"].ToString());
-                        goblin.Working = bool.Parse(row["working"].ToString());
-                        goblin.DoingActivity = bool.Parse(row["doing_activity"].ToString());
-                        goblin.Gender = row["gender"].ToString();
-                        goblin.Hp = int.Parse(row["hp"].ToString());
-                        goblin.Strength = int.Parse(row["strength"].ToString());
-                        goblin.Defense = int.Parse(row["defense"].ToString());
-                        goblin.Tiredness = int.Parse(row["tiredness"].ToString());
-                        goblin.Hunger = int.Parse(row["hunger"].ToString());
-                        goblin.Cleanliness = int.Parse(row["cleanliness"].ToString());
-                        goblin.Sanity = int.Parse(row["sanity"].ToString());
-                        goblin.Sickness = int.Parse(row["sickness"].ToString());
-                        goblin.Sadness = int.Parse(row["sadness"].ToString());
-                        goblin.Happiness = int.Parse(row["happiness"].ToString());
-                        goblin.Fear = int.Parse(row["fear"].ToString());
-                        goblin.Anger = int.Parse(row["anger"].ToString());
-                        goblin.Surprise = int.Parse(row["surprise"].ToString());
-                        goblin.Disgust = int.Parse(row["disgust"].ToString());
-                        break;
-                    }
+                    goblin.FirstName = row["first_name"].ToString();
+                    goblin.LastName = row["last_name"].ToString();
+                    goblin.Living = bool.Parse(row["living"].ToString());
+                    goblin.ReasonOfDeath = row["reason_of_death"].ToString();
+                    goblin.Profession = row["profession"].ToString();
+                    goblin.Age = int.Parse(row["age"].ToString());
+                    goblin.Working = bool.Parse(row["working"].ToString());
+                    goblin.DoingActivity = bool.Parse(row["doing_activity"].ToString());
+                    goblin.Gender = row["gender"].ToString();
+                    goblin.Hp = int.Parse(row["hp"].ToString());
+                    goblin.Strength = int.Parse(row["strength"].ToString());
+                    goblin.Defense = int.Parse(row["defense"].ToString());
+                    goblin.Tiredness = int.Parse(row["tiredness"].ToString());
+                    goblin.Hunger = int.Parse(row["hunger"].ToString());
+                    goblin.Cleanliness = int.Parse(row["cleanliness"].ToString());
+                    goblin.Sanity = int.Parse(row["sanity"].ToString());
+                    goblin.Sickness = int.Parse(row["sickness"].ToString());
+                    goblin.Sadness = int.Parse(row["sadness"].ToString());
+                    goblin.Happiness = int.Parse(row["happiness"].ToString());
+                    goblin.Fear = int.Parse(row["fear"].ToString());
+                    goblin.Anger = int.Parse(row["anger"].ToString());
+                    goblin.Surprise = int.Parse(row["surprise"].ToString());
+                    goblin.Disgust = int.Parse(row["disgust"].ToString());
+                   
+
                 }
                 
             }

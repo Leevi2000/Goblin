@@ -24,25 +24,42 @@ public class MouseController : MonoBehaviour
     {
         var focusedTileHit = GetFocusedOnTile();
 
+        //Temporary!!! selected character nullification
+        if (Input.GetKey(KeyCode.Z))
+        {
+            character = null;
+        }
+
         if (focusedTileHit.HasValue)
         {
             OverlayTile overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
             transform.position = overlayTile.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder+1;
 
+
+            //Find out how to register if raycast hits goblin
             if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
+                RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
+            }
+
+            //For moving / setting a command at mouse position
+            if (Input.GetMouseButtonDown(1))
             {
                 overlayTile.ShowTile();
 
-
-
+                // !!!!!!!! This is for testing purposes only !!!!!!!!!!!
+                // Remove null checker at some point!!
                 if (character == null)
                 {
                     character = Instantiate(characterPrefab).GetComponent<CharacterInfo>();
                     PositionCharacterOnTile(overlayTile);
                 } else
                 {
-                    path = pathFinder.FindPath(character.activeTile, overlayTile);
+                    List<string> a = new List<string> { "grass", "grass_slab" };
+                    path = pathFinder.FindPath(character.activeTile, overlayTile, a);
                 }
 
             }

@@ -6,7 +6,14 @@ using System;
 
 public class PathFinder
 {
-    public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end)
+    /// <summary>
+    /// Finds path between two tiles. !! Implement characterData in different way some time!
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <param name="characterData"></param>
+    /// <returns></returns>
+    public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end, List<string> movementTypes)
     {
         List<OverlayTile> openList = new List<OverlayTile>();
         List<OverlayTile> closedList = new List<OverlayTile>();
@@ -29,8 +36,8 @@ public class PathFinder
 
             foreach (var neighbour in neighbourTiles)
             {
-           
-                if(neighbour.isBlocked || closedList.Contains(neighbour) || Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
+                
+                if(!movementTypes.Contains(neighbour.tileType)  || closedList.Contains(neighbour) || Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
                 {
                     continue;
                 }
@@ -67,7 +74,7 @@ public class PathFinder
 
         return finishedList;
     }
-
+    
     private int GetManhattanDistance(OverlayTile start, OverlayTile neighbour)
     {
         return Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y);

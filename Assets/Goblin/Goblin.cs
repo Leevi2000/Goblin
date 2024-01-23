@@ -78,6 +78,10 @@ namespace Goblin
         public string Gender { get => gender; set => gender = value; }
         public int CurrentTaskId { get => currentTaskId; set => currentTaskId = value; }
 
+        /// <summary>
+        /// !!!!! Reimplement better.
+        /// </summary>
+        /// <returns></returns>
         public Goblin InfoSender()
         {
             Goblin goblin = new Goblin();

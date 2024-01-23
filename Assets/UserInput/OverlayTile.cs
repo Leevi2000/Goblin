@@ -9,7 +9,13 @@ public class OverlayTile : MonoBehaviour
 
     public int F { get { return G + H; } }
 
+    // isBlocked should be removed and replaced with tiletype string
+    // to identify if a character with certain properties can pass on the tile. 
     public bool isBlocked;
+
+    // This is replacement for isBlocked.
+    public string tileType;
+    public bool passable;
 
     public OverlayTile previous;
 
@@ -33,4 +39,5 @@ public class OverlayTile : MonoBehaviour
     {
         gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
     }
+
 }
