@@ -7,16 +7,16 @@ public class MouseController : MonoBehaviour
 {
     public float speed;
     public GameObject characterPrefab;
-    private CharacterInfo character;
+    private Creatures.Creature character;
 
-    private PathFinder pathFinder;
-    private List<OverlayTile> path = new List<OverlayTile>();
+   // private PathFinder pathFinder;
+    // private List<OverlayTile> path = new List<OverlayTile>();
 
 
     // Start is called before the first frame update
     void Start()
     {
-        pathFinder = new PathFinder();
+       // pathFinder = new PathFinder();
     }
 
     // Update is called once per frame
@@ -54,39 +54,43 @@ public class MouseController : MonoBehaviour
                 // Remove null checker at some point!!
                 if (character == null)
                 {
-                    character = Instantiate(characterPrefab).GetComponent<CharacterInfo>();
+                    character = Instantiate(characterPrefab).GetComponent<Creatures.Creature>();
                     PositionCharacterOnTile(overlayTile);
+                    character.activeTile = overlayTile;
                 } else
                 {
-                    List<string> a = new List<string> { "grass", "grass_slab" };
-                    path = pathFinder.FindPath(character.activeTile, overlayTile, a);
+                    character.targetTile = overlayTile;
+                    character.pathRequest = true;
+                   // List<string> a = new List<string> { "grass", "grass_slab" };
+                   // path = pathFinder.FindPath(character.activeTile, overlayTile, a);
+                   
                 }
 
             }
 
         }
 
-        if(path.Count > 0)
-        {
-            MoveAlongPath();
-        }
+        //if(path.Count > 0)
+        //{
+        //    MoveAlongPath();
+        //}
 
     }
 
-    private void MoveAlongPath()
-    {
-        var step = speed * Time.deltaTime;
+    //private void MoveAlongPath()
+    //{
+    //    var step = speed * Time.deltaTime;
 
-        var zIndex = path[0].transform.position.z;
-        character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, step);
-        character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
+    //    var zIndex = path[0].transform.position.z;
+    //    character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, step);
+    //    character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
 
-        if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
-        {
-            PositionCharacterOnTile(path[0]);
-            path.RemoveAt(0);
-        }
-    }
+    //    if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
+    //    {
+    //        PositionCharacterOnTile(path[0]);
+    //        path.RemoveAt(0);
+    //    }
+    //}
 
     public RaycastHit2D? GetFocusedOnTile()
     {
@@ -105,7 +109,7 @@ public class MouseController : MonoBehaviour
 
     private void PositionCharacterOnTile(OverlayTile tile)
     {
-        character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y+0.0001f, tile.transform.position.z);
+        character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
         character.activeTile = tile;
     }

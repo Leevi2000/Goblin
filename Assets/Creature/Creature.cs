@@ -4,13 +4,16 @@ using UnityEngine;
 
 namespace Creatures
 {
-    public class Creature
+    public class Creature : MonoBehaviour
     {
+
         public OverlayTile activeTile;
+        public OverlayTile targetTile;
+        public bool pathRequest;
         List<string> movementTypes;
         List<string> inventory;
 
-        int normalspeed;
+        public int normalspeed;
         int hp;
         float attackRadius;
 
