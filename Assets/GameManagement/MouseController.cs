@@ -5,18 +5,17 @@ using UnityEngine;
 
 public class MouseController : MonoBehaviour
 {
-    public float speed;
-    public GameObject characterPrefab;
-    private Creatures.Creature character;
+    // These two should be removed
+    //public GameObject characterPrefab;
+    //private Creatures.Creature character;
 
-   // private PathFinder pathFinder;
-    // private List<OverlayTile> path = new List<OverlayTile>();
-
+    public List<Creatures.Creature> creatureList = new List<Creatures.Creature>();
+    
 
     // Start is called before the first frame update
     void Start()
     {
-       // pathFinder = new PathFinder();
+
     }
 
     // Update is called once per frame
@@ -24,11 +23,6 @@ public class MouseController : MonoBehaviour
     {
         var focusedTileHit = GetFocusedOnTile();
 
-        //Temporary!!! selected character nullification
-        if (Input.GetKey(KeyCode.Z))
-        {
-            character = null;
-        }
 
         if (focusedTileHit.HasValue)
         {
@@ -40,9 +34,37 @@ public class MouseController : MonoBehaviour
             //Find out how to register if raycast hits goblin
             if (Input.GetMouseButtonDown(0))
             {
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
-                RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
+                if (!Input.GetKey(KeyCode.LeftShift))
+                {
+                    creatureList.Clear();
+                }
+                foreach(var creature in creatureList)
+                {
+                    Debug.Log(creature.name);
+                }
+
+                //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                //Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
+                //RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
+
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Physics.Raycast(ray, out hit, 1000);
+
+                Debug.Log(hit.transform.tag);
+                if (hit.transform.tag == "Creature")
+                {
+                    Creatures.Creature creature = hit.transform.gameObject.GetComponent<Creatures.Creature>();
+                    creature.activeTile = overlayTile;
+                    creatureList.Add(creature);
+                }
+                
+                
+
+
+                
+               // creatureList.Add(hit.articulationBody)
+
             }
 
             //For moving / setting a command at mouse position
@@ -50,47 +72,29 @@ public class MouseController : MonoBehaviour
             {
                 overlayTile.ShowTile();
 
-                // !!!!!!!! This is for testing purposes only !!!!!!!!!!!
-                // Remove null checker at some point!!
-                if (character == null)
+                foreach (var creature in creatureList)
                 {
-                    character = Instantiate(characterPrefab).GetComponent<Creatures.Creature>();
-                    PositionCharacterOnTile(overlayTile);
-                    character.activeTile = overlayTile;
-                } else
-                {
-                    character.targetTile = overlayTile;
-                    character.pathRequest = true;
-                   // List<string> a = new List<string> { "grass", "grass_slab" };
-                   // path = pathFinder.FindPath(character.activeTile, overlayTile, a);
-                   
+                    creature.targetTile = overlayTile;
+                    creature.pathRequest = true;
                 }
+                //// !!!!!!!! This is for testing purposes only !!!!!!!!!!!
+                //// Remove null checker at some point!!
+                //if (character == null)
+                //{
+                //    character = Instantiate(characterPrefab).GetComponent<Creatures.Creature>();
+                //    PositionCharacterOnTile(overlayTile);
+                //    character.activeTile = overlayTile;
+                //} else
+                //{
+                //    character.targetTile = overlayTile;
+                //    character.pathRequest = true;
+                //}
 
             }
 
         }
 
-        //if(path.Count > 0)
-        //{
-        //    MoveAlongPath();
-        //}
-
     }
-
-    //private void MoveAlongPath()
-    //{
-    //    var step = speed * Time.deltaTime;
-
-    //    var zIndex = path[0].transform.position.z;
-    //    character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, step);
-    //    character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
-
-    //    if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
-    //    {
-    //        PositionCharacterOnTile(path[0]);
-    //        path.RemoveAt(0);
-    //    }
-    //}
 
     public RaycastHit2D? GetFocusedOnTile()
     {
@@ -107,7 +111,7 @@ public class MouseController : MonoBehaviour
         return null;
     }
 
-    private void PositionCharacterOnTile(OverlayTile tile)
+    private void PositionCharacterOnTile(OverlayTile tile, Creatures.Creature character)
     {
         character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;

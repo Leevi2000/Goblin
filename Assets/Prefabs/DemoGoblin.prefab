@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 7717082305659795431}
   - component: {fileID: 5716623251481588946}
   - component: {fileID: 7933013317101198313}
-  - component: {fileID: 2148348494217258294}
+  - component: {fileID: -8959299774748459270}
   m_Layer: 0
   m_Name: DemoGoblin
-  m_TagString: Untagged
+  m_TagString: Creature
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -113,7 +113,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.31952834, y: 0.72471356, z: 0.2}
   m_Center: {x: 0.0009454489, y: 0.5889193, z: 0}
---- !u!114 &2148348494217258294
+--- !u!114 &-8959299774748459270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7825142259757001318}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05facf36cc96f0346929bdddabf5433c, type: 3}
+  m_Script: {fileID: 11500000, guid: 492cc4900ba9113439fdf2d1657c564f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activeTile: {fileID: 0}

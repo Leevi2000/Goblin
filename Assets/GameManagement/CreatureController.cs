@@ -40,6 +40,12 @@ public class CreatureController : MonoBehaviour
                 List<OverlayTile> path = new List<OverlayTile>();
                 if (creature.pathRequest)
                 {
+                    if (pathList.ContainsKey(creature))
+                    {
+                        pathList.Remove(creature);
+                    }
+
+
                     path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
                     creature.pathRequest = false;
                     
