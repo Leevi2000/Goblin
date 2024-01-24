@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Goblin
+namespace Names
 {
-    public class Names
+    public class Goblin
     {
         string[] male = {
             "Brung","Glukx","Jeakz","Wrikz","Slags","Yvaz","Clisbisb","Lilgeakt","Vroibtisb","Cryklekx","Bleek","Dirm","Pegz","Guizz","Cort","Gusaags","Cribzect","Kursaags","Prealygs","Wuidfukt"

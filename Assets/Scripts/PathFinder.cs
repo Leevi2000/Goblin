@@ -7,7 +7,7 @@ using System;
 public class PathFinder
 {
     /// <summary>
-    /// Finds path between two tiles. !! Implement characterData in different way some time!
+    /// Finds path between two tiles.
     /// </summary>
     /// <param name="start"></param>
     /// <param name="end"></param>
