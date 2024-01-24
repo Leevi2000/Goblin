@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Creature
+namespace Creatures
 {
-    public class GeneralCreature
+    public class Creature
     {
         public OverlayTile activeTile;
         List<string> movementTypes;
@@ -15,6 +15,11 @@ namespace Creature
         float attackRadius;
 
         void CheckActions()
+        {
+
+        }
+
+        void MoveTo(OverlayTile tile)
         {
 
         }
