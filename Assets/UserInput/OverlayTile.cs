@@ -16,17 +16,22 @@ public class OverlayTile : MonoBehaviour
     // This is replacement for isBlocked.
     public string tileType;
     public bool passable;
-
+    public bool occupied;
     public OverlayTile previous;
 
     public Vector3Int gridLocation;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if(Input.GetMouseButtonDown(0))
+        //if(Input.GetMouseButtonDown(0))
+        //{
+        //    HideTile();
+        //}
+        Color col = gameObject.GetComponent<SpriteRenderer>().color;
+        if (gameObject.GetComponent<SpriteRenderer>().color.a > 0)
         {
-            HideTile();
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, col.a - 0.01f);
         }
     }
 

@@ -37,7 +37,7 @@ public class PathFinder
             foreach (var neighbour in neighbourTiles)
             {
                 
-                if(!movementTypes.Contains(neighbour.tileType)  || closedList.Contains(neighbour) || Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
+                if(!movementTypes.Contains(neighbour.tileType)  || closedList.Contains(neighbour) || Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1 || neighbour.occupied)
                 {
                     continue;
                 }
@@ -77,7 +77,13 @@ public class PathFinder
     
     private int GetManhattanDistance(OverlayTile start, OverlayTile neighbour)
     {
-        return Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y);
+        float randMultiplier = 1;
+        var x = UnityEngine.Random.Range(1, 100);
+        if (x < 10)
+            randMultiplier = UnityEngine.Random.Range(0.2f, 5f);
+
+        int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
+        return dist;
     }
 
     private List<OverlayTile> GetNeighbourTiles(OverlayTile currentOverlayTile)

@@ -9,6 +9,7 @@ namespace Creatures
 
         public OverlayTile activeTile;
         public OverlayTile targetTile;
+        public OverlayTile previousTile;
         public bool pathRequest;
         List<string> movementTypes;
         List<string> inventory;
@@ -25,6 +26,14 @@ namespace Creatures
         void MoveTo(OverlayTile tile)
         {
 
+        }
+
+        private void Update()
+        {
+            if (previousTile == null)
+            {
+                previousTile = activeTile;
+            }
         }
 
     }

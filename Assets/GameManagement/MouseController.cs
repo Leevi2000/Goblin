@@ -59,12 +59,7 @@ public class MouseController : MonoBehaviour
                     creatureList.Add(creature);
                 }
                 
-                
-
-
-                
-               // creatureList.Add(hit.articulationBody)
-
+               
             }
 
             //For moving / setting a command at mouse position

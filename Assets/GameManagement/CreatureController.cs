@@ -68,6 +68,7 @@ public class CreatureController : MonoBehaviour
             if (path.Count > 0)
             {
                 MoveAlongPath(creature, path);
+               // CheckTarget();
             }
             else
             {
@@ -89,6 +90,9 @@ public class CreatureController : MonoBehaviour
         if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
         {
             PositionCharacterOnTile(character, path[0]);
+            //character.activeTile = path[0];
+            //path[0].occupied = true;
+            
             path.RemoveAt(0);
         }
     }
@@ -98,7 +102,18 @@ public class CreatureController : MonoBehaviour
     {
         character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
+
+        // Ensin aiempi tile laitetaan unoccupied
+        character.previousTile.occupied = false;
+
+        // Aktiiviseksi tileksi tulee uusi tile
+        character.previousTile = character.activeTile;
         character.activeTile = tile;
+
+        // Uusi tile tulee olemaan occupied
+        tile.occupied = true;
+        
+        
     }
 
 }
