@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Goblin;
 using Database.Backend;
 
 public class DatabaseCommunicator : MonoBehaviour

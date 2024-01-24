@@ -10,7 +10,7 @@ namespace Database.Communicator
         DB_Backend goblinData = new DB_Backend();
 
 
-        public void SaveGoblin(Goblin.Goblin goblin)
+        public void SaveGoblin(DTO.Goblin goblin)
         {
             goblinData.SaveGoblin(goblin);
         }
@@ -20,7 +20,7 @@ namespace Database.Communicator
             goblinData.InitializeDatabases();
         }
 
-        public Goblin.Goblin LoadGoblin(int goblinId)
+        public DTO.Goblin LoadGoblin(int goblinId)
         {
             return goblinData.LoadGoblin(goblinId);
         }

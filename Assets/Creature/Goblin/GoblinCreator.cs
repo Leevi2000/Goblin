@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Database.Communicator;
 
-namespace Goblin.Creator
+namespace DTO.GoblinCreator
 {
     public class GoblinCreator : MonoBehaviour
     {
@@ -80,7 +80,7 @@ namespace Goblin.Creator
 
         private Goblin GenerateName(Goblin goblin)
         {
-            Names nameGen = new Names();
+            Names.Goblin nameGen = new Names.Goblin();
 
             if(goblin.Gender == "Male")
             {

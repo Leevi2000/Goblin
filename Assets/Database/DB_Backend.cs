@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mono.Data.Sqlite;
 using System.IO;
-using Goblin;
 using System.Data;
 
 namespace Database.Backend
@@ -105,7 +104,7 @@ namespace Database.Backend
             return success;
         }
 
-        public bool SaveGoblin(Goblin.Goblin goblin)
+        public bool SaveGoblin(DTO.Goblin goblin)
         {
     
             bool success = false;
@@ -171,9 +170,9 @@ namespace Database.Backend
             return success;
         }
 
-        public Goblin.Goblin LoadGoblin(int goblinId)
+        public DTO.Goblin LoadGoblin(int goblinId)
         {
-            Goblin.Goblin goblin = new Goblin.Goblin();
+            DTO.Goblin goblin = new DTO.Goblin();
 
 
             string fetchCmd = $"SELECT * FROM goblins LEFT JOIN details ON goblins.id=details.goblin_id LEFT JOIN stats ON goblins.id=stats.goblin_id LEFT JOIN emotions ON goblins.id=emotions.goblin_Id WHERE goblins.id={goblinId}";

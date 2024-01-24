@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Goblin
+// Should be moved under dto namespace
+namespace Creature
 {
    
     public class Goblin

@@ -6,7 +6,7 @@ public class GoblinLoader : MonoBehaviour
 {
     Database.Communicator.DatabaseCommunicator dbCommunicator = new Database.Communicator.DatabaseCommunicator();
     public GameObject testGoblin;
-    Goblin.Goblin goblin;
+    DTO.Goblin goblin;
     [SerializeField]
     string name;
 
