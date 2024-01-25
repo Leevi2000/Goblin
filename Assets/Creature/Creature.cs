@@ -14,7 +14,7 @@ namespace Creatures
         List<string> movementTypes;
         List<string> inventory;
 
-        public int normalspeed;
+        public float normalspeed;
         int hp;
         float attackRadius;
 

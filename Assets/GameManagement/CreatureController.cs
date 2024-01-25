@@ -7,7 +7,8 @@ public class CreatureController : MonoBehaviour
 
     List<Creatures.Creature> creatureList = new List<Creatures.Creature>();
 
-    Dictionary<Creatures.Creature,List<OverlayTile>> pathList = new Dictionary<Creatures.Creature, List<OverlayTile>>();
+    
+    public Dictionary<Creatures.Creature,List<OverlayTile>> pathList = new Dictionary<Creatures.Creature, List<OverlayTile>>();
 
     private PathFinder pathFinder = new PathFinder();
    // private List<OverlayTile> path = new List<OverlayTile>();
@@ -90,8 +91,6 @@ public class CreatureController : MonoBehaviour
         if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
         {
             PositionCharacterOnTile(character, path[0]);
-            //character.activeTile = path[0];
-            //path[0].occupied = true;
             
             path.RemoveAt(0);
         }
@@ -107,7 +106,9 @@ public class CreatureController : MonoBehaviour
         character.previousTile.occupied = false;
 
         // Aktiiviseksi tileksi tulee uusi tile
+        character.activeTile.occupied = false;
         character.previousTile = character.activeTile;
+        
         character.activeTile = tile;
 
         // Uusi tile tulee olemaan occupied

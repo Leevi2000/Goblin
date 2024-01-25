@@ -611,6 +611,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1172187131 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
+  m_PrefabInstance: {fileID: 1466728989}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1172187137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1172187131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 492cc4900ba9113439fdf2d1657c564f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeTile: {fileID: 0}
+  targetTile: {fileID: 0}
+  previousTile: {fileID: 0}
+  pathRequest: 0
+  normalspeed: 3
+--- !u!1 &1215105577 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
+  m_PrefabInstance: {fileID: 1890986032}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1215105583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215105577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 492cc4900ba9113439fdf2d1657c564f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeTile: {fileID: 0}
+  targetTile: {fileID: 0}
+  previousTile: {fileID: 0}
+  pathRequest: 0
+  normalspeed: 3
 --- !u!1 &1262829090
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,8 +685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2b376fb1e5e89747ba3929dc9989bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
-  characterPrefab: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
+  creatureList: []
 --- !u!212 &1262829092
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -769,7 +812,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemoGoblin (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
+      propertyPath: m_TagString
+      value: Creature
+      objectReference: {fileID: 0}
+    - target: {fileID: 7933013317101198313, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
 --- !u!1 &1582846991
 GameObject:
@@ -3201,5 +3253,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemoGoblin
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
+      propertyPath: m_TagString
+      value: Creature
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: ade7207597910bd4ca420ab1af838a57, type: 3}

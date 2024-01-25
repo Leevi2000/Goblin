@@ -21,6 +21,9 @@ public class OverlayTile : MonoBehaviour
 
     public Vector3Int gridLocation;
 
+
+    bool tileOnDebugMode = false;
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -28,21 +31,40 @@ public class OverlayTile : MonoBehaviour
         //{
         //    HideTile();
         //}
-        Color col = gameObject.GetComponent<SpriteRenderer>().color;
-        if (gameObject.GetComponent<SpriteRenderer>().color.a > 0)
-        {
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, col.a - 0.01f);
-        }
-    }
 
+        if (!tileOnDebugMode)
+        {
+            Color col = gameObject.GetComponent<SpriteRenderer>().color;
+            if (gameObject.GetComponent<SpriteRenderer>().color.a > 0)
+            {
+                gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, col.a - 0.01f);
+            }
+        }
+        
+    }
+    /// <summary>
+    /// Shows white tile and disables debug flag on tile.
+    /// </summary>
     public void ShowTile()
     {
+
+        tileOnDebugMode = false;
         gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
     }
 
     public void HideTile()
     {
         gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+    }
+
+    /// <summary>
+    /// Enables debug flag on tile
+    /// </summary>
+    /// <param name="col"></param>
+    public void SetColor(Color col)
+    {
+        tileOnDebugMode = true;
+        gameObject.GetComponent<SpriteRenderer>().color = col;
     }
 
 }
