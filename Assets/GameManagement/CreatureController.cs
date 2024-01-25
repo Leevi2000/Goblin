@@ -103,7 +103,7 @@ public class CreatureController : MonoBehaviour
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
 
         // Ensin aiempi tile laitetaan unoccupied
-        character.previousTile.occupied = false;
+        //character.previousTile.occupied = false;
 
         // Aktiiviseksi tileksi tulee uusi tile
         character.activeTile.occupied = false;

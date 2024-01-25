@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OverlayTile : MonoBehaviour
 {
+    // G, H, F are for pathfinding to store distances between start - tile and end - tile.
     public int G;
     public int H;
 
@@ -17,6 +18,9 @@ public class OverlayTile : MonoBehaviour
     public string tileType;
     public bool passable;
     public bool occupied;
+
+    // Makes backtracking of tiles possible in pathfinder. 
+    // Is used to construct the final path.
     public OverlayTile previous;
 
     public Vector3Int gridLocation;
