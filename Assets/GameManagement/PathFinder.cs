@@ -21,9 +21,6 @@ public class PathFinder
             end = FindClosestPassable(end, movementTypes);
         }
 
-
-
-
         // openList contains tiles that have not been processed yet.
         List<OverlayTile> openList = new List<OverlayTile>();
 
@@ -184,7 +181,7 @@ public class PathFinder
     /// <param name="tile"></param>
     /// <param name="movementTypes"></param>
     /// <returns></returns>
-    private bool CheckIfPassable(OverlayTile tile, List<string> movementTypes)
+    public bool CheckIfPassable(OverlayTile tile, List<string> movementTypes)
     {
         if (!movementTypes.Contains(tile.tileType) || tile.occupied)
         {
