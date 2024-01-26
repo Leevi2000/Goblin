@@ -45,11 +45,17 @@ public class CreatureController : MonoBehaviour
                         pathList.Remove(creature);
                     }
 
+                    if (creature.targetTile != creature.activeTile)
+                    {
+                        path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
+                        pathList.Add(creature, path);
 
-                    path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
+                        creature.activeTile.occupied = false;
+                    }
+                    
                     creature.pathRequest = false;
                     
-                    pathList.Add(creature, path);
+                    
                 }
             }
         }
@@ -64,14 +70,23 @@ public class CreatureController : MonoBehaviour
                 if (path.Count < 3 && !pathFinder.CheckIfPassable(path[path.Count - 1], a))
                 {
                     path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
+
                     pathList[creature] = path;
                 }
                 MoveAlongPath(creature, path);
-             
+
+                // Test this
+               
+
             }
             else
             {
                 pathList.Remove(creature);
+
+                if (path.Count == 0)
+                {
+                    creature.activeTile.occupied = true;
+                }
             }
         }
 
@@ -100,17 +115,15 @@ public class CreatureController : MonoBehaviour
         character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
 
-        // Ensin aiempi tile laitetaan unoccupied
-        //character.previousTile.occupied = false;
 
         // Aktiiviseksi tileksi tulee uusi tile
-        character.activeTile.occupied = false;
+        //character.activeTile.occupied = false;
         character.previousTile = character.activeTile;
         
         character.activeTile = tile;
 
         // Uusi tile tulee olemaan occupied
-        tile.occupied = true;
+        //tile.occupied = true;
         
         
     }

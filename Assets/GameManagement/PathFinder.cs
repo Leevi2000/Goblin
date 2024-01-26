@@ -51,7 +51,7 @@ public class PathFinder
             foreach (var neighbour in neighbourTiles)
             {
                 // Skip tile if it contains of the following:
-                if(!movementTypes.Contains(neighbour.tileType)  || closedList.Contains(neighbour) || Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1 || neighbour.occupied)
+                if(!movementTypes.Contains(neighbour.tileType)  || closedList.Contains(neighbour) || Mathf.Abs(currentOverlayTile.gridLocation.z - neighbour.gridLocation.z) > 1)
                 {
                     continue;
                 }

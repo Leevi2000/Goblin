@@ -31,6 +31,17 @@ public class MouseController : MonoBehaviour
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder+1;
 
 
+            // Select all creatures
+            if (Input.GetKey(KeyCode.Z))
+            {
+                creatureList.Clear();
+                var creatures = GameObject.FindGameObjectsWithTag("Creature");
+                foreach (var creature in creatures)
+                    creatureList.Add(creature.GetComponent<Creatures.Creature>());
+
+                Debug.Log("Selected all creatures!");
+            }
+
             //Find out how to register if raycast hits goblin
             if (Input.GetMouseButtonDown(0))
             {
@@ -42,6 +53,7 @@ public class MouseController : MonoBehaviour
                 {
                     Debug.Log(creature.name);
                 }
+                
 
                 //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 //Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
