@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class CreatureController : MonoBehaviour
 {
@@ -22,73 +23,25 @@ public class CreatureController : MonoBehaviour
     void FixedUpdate()
     {
 
-        var objectArray = FindObjectsOfType<Creatures.Creature>();
-        foreach (var i in objectArray)
-        {
-            if (!creatureList.Contains(i))
-            {
-                creatureList.Add(i);
-            }
-        }
+
+
+
+
+
+
+
+
+        //FixCreaturePositioning(creatureList);
+        RefreshCreatureList(creatureList);
 
         
         foreach (Creatures.Creature creature in creatureList)
         {
-            if (creature.pathRequest)
-            {
-                List<string> a = new List<string> { "grass", "grass_slab" };
-                List<OverlayTile> path = new List<OverlayTile>();
-                if (creature.pathRequest)
-                {
-                    if (pathList.ContainsKey(creature))
-                    {
-                        pathList.Remove(creature);
-                    }
-
-                    if (creature.targetTile != creature.activeTile)
-                    {
-                        path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
-                        pathList.Add(creature, path);
-
-                        creature.activeTile.occupied = false;
-                    }
-                    
-                    creature.pathRequest = false;
-                    
-                    
-                }
-            }
+            CheckPathRequests(creature);
         }
 
-        foreach (Creatures.Creature creature in pathList.Keys)
-        {
+        ProcessPathlist();
 
-            List<OverlayTile> path = pathList[creature];
-            if (path.Count > 0)
-            {
-                List<string> a = new List<string> { "grass", "grass_slab" };
-                if (path.Count < 3 && !pathFinder.CheckIfPassable(path[path.Count - 1], a))
-                {
-                    path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
-
-                    pathList[creature] = path;
-                }
-                MoveAlongPath(creature, path);
-
-                // Test this
-               
-
-            }
-            else
-            {
-                pathList.Remove(creature);
-
-                if (path.Count == 0)
-                {
-                    creature.activeTile.occupied = true;
-                }
-            }
-        }
 
     }
 
@@ -126,6 +79,133 @@ public class CreatureController : MonoBehaviour
         //tile.occupied = true;
         
         
+    }
+
+    private void CheckPathRequests(Creatures.Creature creature)
+    {
+
+        if (creature.pathRequest)
+        {
+            List<string> a = new List<string> { "grass", "grass_slab" };
+            List<OverlayTile> path = new List<OverlayTile>();
+           
+            if (pathList.ContainsKey(creature))
+            {
+                pathList.Remove(creature);
+            }
+            // If creature should begin moving, find path and make status changes for creature
+            if (creature.targetTile != creature.activeTile)
+            {
+                path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
+                pathList.Add(creature, path);
+
+                creature.activeTile.occupied = false;
+                creature.moving = true;
+            }
+
+            creature.pathRequest = false;
+            
+        }
+    }
+
+    private void RefreshCreatureList(List<Creatures.Creature> creatureList)
+    {
+        // Get all creatures and new creatures to the creatureList
+        var objectArray = FindObjectsOfType<Creatures.Creature>();
+        foreach (var i in objectArray)
+        {
+            if (!creatureList.Contains(i))
+            {
+                creatureList.Add(i);
+            }
+        }
+    }
+
+
+    private void FixCreaturePositioning(List<Creatures.Creature> creatures)
+    {
+       // Dictionary<Creatures.Creature, OverlayTile> creatureTiles = new Dictionary<Creatures.Creature, OverlayTile>();
+       // foreach (Creatures.Creature creature in creatures)
+       // {
+       //     if (creature.moving)
+       //         continue;
+       //     else
+       //         creatureTiles.Add(creature, creature.activeTile);
+       // }
+
+       //// creatures.GroupBy<>
+       // //var y = creatureTiles.Values.GroupBy(x => x)
+
+       // foreach(var x in )
+       // {
+
+       //     foreach (var creature in creatureTiles.Keys)
+       //     {
+
+       //     }
+       // }
+    }
+
+    private void ProcessPathlist()
+    {
+        // Makes the character to move along desired path and choosing a new path if destination becomes blocked.   
+        foreach (Creatures.Creature creature in pathList.Keys)
+        {
+
+            List<OverlayTile> path = pathList[creature];
+            if (path.Count > 0)
+            {
+                List<string> a = new List<string> { "grass", "grass_slab" };
+                if (path.Count < 5 && !pathFinder.CheckIfPassable(path[path.Count - 1], a))
+                {
+                    //path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
+                    int i = 0;
+                    bool x = true;
+                    while (x || i < 10)
+                    {
+
+                        if (path[path.Count - 1].occupied)
+                        {
+                            var passable = pathFinder.FindClosestPassable(creature.activeTile, creature.targetTile, a);
+                            path = pathFinder.FindPath(creature.activeTile, passable, a);
+
+                            if (path.Count == 0)
+                            {
+
+                                path.Add(creature.activeTile);
+
+                            }
+
+
+                        }
+                        else
+                        {
+                            x = false;
+                        }
+
+                        i++;
+                    }
+
+                    pathList[creature] = path;
+                }
+                MoveAlongPath(creature, path);
+
+            }
+            else
+            {
+                pathList.Remove(creature);
+                Debug.Log("Removed creature from pathlist");
+                PositionCharacterOnTile(creature, creature.activeTile);
+
+
+                if (path.Count == 0)
+                {
+                    creature.activeTile.occupied = true;
+                    creature.moving = false;
+                }
+            }
+        }
+
     }
 
 }

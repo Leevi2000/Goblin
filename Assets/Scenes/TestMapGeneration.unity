@@ -1138,6 +1138,10 @@ PrefabInstance:
       value: DemoGoblin (1)
       objectReference: {fileID: 0}
     - target: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
       propertyPath: m_TagString
       value: Creature
       objectReference: {fileID: 0}
@@ -3678,6 +3682,10 @@ PrefabInstance:
     - target: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
       propertyPath: m_Name
       value: DemoGoblin
+      objectReference: {fileID: 0}
+    - target: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7825142259757001318, guid: ade7207597910bd4ca420ab1af838a57, type: 3}
       propertyPath: m_TagString

@@ -11,6 +11,7 @@ namespace Creatures
         public OverlayTile targetTile;
         public OverlayTile previousTile;
         public bool pathRequest;
+        public bool moving;
         List<string> movementTypes;
         List<string> inventory;
 

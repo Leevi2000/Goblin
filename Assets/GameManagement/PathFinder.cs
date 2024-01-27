@@ -18,7 +18,7 @@ public class PathFinder
         // If the tile is not passable, find a closest passable tile. Set it as end tile. 
         if(!CheckIfPassable(end, movementTypes))
         {
-            end = FindClosestPassable(end, movementTypes);
+            end = FindClosestPassable(start, end, movementTypes);
         }
 
         // openList contains tiles that have not been processed yet.
@@ -190,11 +190,19 @@ public class PathFinder
         return true;
     }
 
-    private OverlayTile FindClosestPassable(OverlayTile targetTile, List<string> movementTypes)
+    public OverlayTile FindClosestPassable(OverlayTile startTile,OverlayTile targetTile, List<string> movementTypes)
     {
         var neighbours = GetNeighbourTiles(targetTile);
+        //OverlayTile neighboursToReturn;
         List<OverlayTile> processedTiles = new List<OverlayTile>();
         List<OverlayTile> notProcessedTiles = new List<OverlayTile>();
+
+
+        List<OverlayTile> possibleCandidates = new List<OverlayTile>();
+
+        OverlayTile closestNeighbour = null;
+        //closestNeighbour.gridLocation = new Vector3Int(-999, -999, -999);
+
         // Goes through neighbours, returns one, if passable. Else continues to search for further tiles.
         while(true)
         {
@@ -202,7 +210,7 @@ public class PathFinder
             {
                 if (CheckIfPassable(neighbour, movementTypes))
                 {
-                    return neighbour;
+                    possibleCandidates.Add(neighbour);
                 }
 
                 
@@ -211,6 +219,26 @@ public class PathFinder
                     notProcessedTiles.Add(neighbour);
                 }
                 
+            }
+            if (possibleCandidates.Count > 0)
+            {
+                // Go through each possible tile candidate
+                foreach (var neighbour in possibleCandidates)
+                {
+
+                    if (closestNeighbour == null)
+                    {
+                        closestNeighbour = neighbour;
+                        continue;
+                    }
+
+                    else if (GetManhattanDistance(startTile, neighbour) < GetManhattanDistance(startTile, closestNeighbour))
+                    {
+                        closestNeighbour = neighbour;
+                    }
+
+                }
+                return closestNeighbour;
             }
 
             // Set a new list of neighbouring tiles.
