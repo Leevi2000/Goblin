@@ -54,11 +54,6 @@ public class MouseController : MonoBehaviour
                     Debug.Log(creature.name);
                 }
                 
-
-                //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                //Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
-                //RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
-
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Physics.Raycast(ray, out hit, 1000);
@@ -84,19 +79,6 @@ public class MouseController : MonoBehaviour
                     creature.targetTile = overlayTile;
                     creature.pathRequest = true;
                 }
-                //// !!!!!!!! This is for testing purposes only !!!!!!!!!!!
-                //// Remove null checker at some point!!
-                //if (character == null)
-                //{
-                //    character = Instantiate(characterPrefab).GetComponent<Creatures.Creature>();
-                //    PositionCharacterOnTile(overlayTile);
-                //    character.activeTile = overlayTile;
-                //} else
-                //{
-                //    character.targetTile = overlayTile;
-                //    character.pathRequest = true;
-                //}
-
             }
 
         }

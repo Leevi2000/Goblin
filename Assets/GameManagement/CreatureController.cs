@@ -85,7 +85,7 @@ public class CreatureController : MonoBehaviour
         // Checking creature path request status.
         if (creature.pathRequest)
         {
-            List<string> a = new List<string> { "grass", "grass_slab" };
+            List<string> movementTypes = creature.movementTypeTileNames;
 
             // New list for future path
             List<OverlayTile> path = new List<OverlayTile>();
@@ -100,7 +100,7 @@ public class CreatureController : MonoBehaviour
             if (creature.targetTile != creature.activeTile)
             {
                 
-                path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
+                path = pathFinder.FindPath(creature.activeTile, creature.targetTile, movementTypes);
                 pathList.Add(creature, path);
 
                 creature.activeTile.occupied = false;
@@ -135,52 +135,21 @@ public class CreatureController : MonoBehaviour
         }
     }
 
-
-    private void FixCreaturePositioning(List<Creatures.Creature> creatures)
-    {
-       // Dictionary<Creatures.Creature, OverlayTile> creatureTiles = new Dictionary<Creatures.Creature, OverlayTile>();
-       // foreach (Creatures.Creature creature in creatures)
-       // {
-       //     if (creature.moving)
-       //         continue;
-       //     else
-       //         creatureTiles.Add(creature, creature.activeTile);
-       // }
-
-       //// creatures.GroupBy<>
-       // //var y = creatureTiles.Values.GroupBy(x => x)
-
-       // foreach(var x in )
-       // {
-
-       //     foreach (var creature in creatureTiles.Keys)
-       //     {
-
-       //     }
-       // }
-    }
-
     /// <summary>
     /// Goes through the pathList, handles creature movement.
     /// </summary>
     private void ProcessPathlist()
     {
-        int maxPathAltercations = 25;
-        int pathAltercations = 0;
-
-        // Makes the character to move along desired path and choosing a new path if destination becomes blocked.   
+        // Makes the character to move along desired path and chooses a new path if destination becomes blocked.   
         foreach (Creatures.Creature creature in pathList.Keys.ToList())
         {
             // Setting the current creature's path to the path variable
             List<OverlayTile> path = pathList[creature];
 
             // If path is greater than 0, it means the creature isn't at its desired destination yet.
-            // 
             if (path.Count > 0)
             {
-                
                 var endTile = path[path.Count - 1];
-
 
                 // If end tile is reserved to a current creature, no need to check target tile.
                 if (endTile.reserved && endTile.reservedTo == creature)
@@ -189,23 +158,16 @@ public class CreatureController : MonoBehaviour
                 }
                 else
                 {
-                  
                     NearTargetProcedure(creature, path, endTile);
-                    pathAltercations++;
-                  
-
                 }
-
-                    
-                
+ 
                 MoveAlongPath(creature, path);
 
-
             }
-            // When path doesn't contain elements, the creature has arrived at the target destination
+            // When path list doesn't contain anything, the creature has arrived at the target destination
             else
             {
-                // Character doesn't need to be moved, so remove it from pathList dictionary.
+                // Character doesn't need to be moved anymore, so remove it from pathList dictionary.
                 pathList.Remove(creature);
                 PositionCharacterOnTile(creature, creature.activeTile);
 
@@ -217,10 +179,6 @@ public class CreatureController : MonoBehaviour
                     creature.reservedTile.reserved = false;
                     creature.reservedTile = null;
                 }
-             
-
-                    // Maybe it should be checked there aren't any other creatures on current tile as the last line of preventing odd behaviour.
-                
             }
         }
 
@@ -234,11 +192,11 @@ public class CreatureController : MonoBehaviour
     /// <param name="endTile"></param>
     private void NearTargetProcedure(Creatures.Creature creature ,List<OverlayTile> path, OverlayTile endTile)
     {
-        List<string> a = new List<string> { "grass", "grass_slab" };
+        List<string> movementTypes = creature.movementTypeTileNames;
 
         // When the creature comes closer to the target destination, check if tile is still allowed as end tile.
         // This is to prevent several creatures stopping on same tile.
-        if (path.Count < 7 && !pathFinder.CheckIfPassable(endTile, a))
+        if (path.Count < 7 && !pathFinder.CheckIfPassable(endTile, movementTypes))
         {
 
             int i = 0;
@@ -250,8 +208,8 @@ public class CreatureController : MonoBehaviour
                 // If end tile has become occupied or reserved by another creature, find a path to the closest unoccupied tile:
                 if (endTile.occupied)
                 {
-                    var passable = pathFinder.FindClosestPassable(creature.activeTile, creature.targetTile, a);
-                    path = pathFinder.FindPath(creature.activeTile, passable, a);
+                    var passable = pathFinder.FindClosestPassable(creature.activeTile, creature.targetTile, movementTypes);
+                    path = pathFinder.FindPath(creature.activeTile, passable, movementTypes);
 
                     // When assigning new path, it is possible that the character will move back to previous tile. 
                     // This handles that occurence.
@@ -259,7 +217,6 @@ public class CreatureController : MonoBehaviour
                     {
                         path.Add(creature.activeTile);
                         endTile.reservedTo = creature;
-                        //endTile.reserved = true;
                         creature.reservedTile = endTile;
                     }
                 }

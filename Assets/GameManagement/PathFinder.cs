@@ -193,7 +193,6 @@ public class PathFinder
     public OverlayTile FindClosestPassable(OverlayTile startTile,OverlayTile targetTile, List<string> movementTypes)
     {
         var neighbours = GetNeighbourTiles(targetTile);
-        //OverlayTile neighboursToReturn;
         List<OverlayTile> processedTiles = new List<OverlayTile>();
         List<OverlayTile> notProcessedTiles = new List<OverlayTile>();
 
@@ -201,7 +200,6 @@ public class PathFinder
         List<OverlayTile> possibleCandidates = new List<OverlayTile>();
 
         OverlayTile closestNeighbour = null;
-        //closestNeighbour.gridLocation = new Vector3Int(-999, -999, -999);
 
         // Goes through neighbours, returns one, if passable. Else continues to search for further tiles.
         while(true)
@@ -213,7 +211,6 @@ public class PathFinder
                     possibleCandidates.Add(neighbour);
                 }
 
-                
                 if (!processedTiles.Contains(neighbour))
                 {
                     notProcessedTiles.Add(neighbour);
