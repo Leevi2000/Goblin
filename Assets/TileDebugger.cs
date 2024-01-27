@@ -6,10 +6,11 @@ public class TileDebugger : MonoBehaviour
 {
     public Color COL_Occupied;
     public Color COL_CreaturePath;
+    public Color COL_Reserved;
 
     public bool Show_Occupied;
     public bool Show_CreaturePath;
-
+    public bool Show_Reserved;
 
     // Update is called once per frame
     void Update()
@@ -21,6 +22,9 @@ public class TileDebugger : MonoBehaviour
         if (Show_CreaturePath)
             ShowCreaturePaths();
        
+        if(Show_Reserved)
+            ShowReservedTiles();
+
     }
 
     /// <summary>
@@ -55,6 +59,23 @@ public class TileDebugger : MonoBehaviour
             foreach (var tile in path)
             {
                 tile.SetColor(COL_CreaturePath);
+            }
+        }
+    }
+
+    void ShowReservedTiles()
+    {
+        var tiles = GetComponentsInChildren<OverlayTile>();
+
+        foreach (var tile in tiles)
+        {
+            if (tile.reserved)
+            {
+                tile.SetColor(COL_Reserved);
+            }
+            else
+            {
+                tile.ShowTile();
             }
         }
     }

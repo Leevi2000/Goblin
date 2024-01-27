@@ -30,22 +30,26 @@ public class ExperimentalGoblinSpawner : MonoBehaviour
 
     public void SummonGoblin()
     {
-        int possibleTiles = 0;
-
-        foreach (OverlayTile tile in tiles)
+        for (int i = 0; i < 10; i++)
         {
-            if (tile.tileType == "grass")
+            int possibleTiles = 0;
+
+            foreach (OverlayTile tile in tiles)
             {
-                possibleTiles++;
+                if (tile.tileType == "grass")
+                {
+                    possibleTiles++;
+                }
             }
+
+            var x = UnityEngine.Random.Range(1, possibleTiles - 1);
+
+            goblinPrefab.GetComponent<Creatures.Creature>().activeTile = tiles[x];
+            Instantiate(goblinPrefab);
+
+            creatureController.PositionCharacterOnTile(goblinPrefab.GetComponent<Creatures.Creature>(), tiles[x]);
+
         }
-
-        var x = UnityEngine.Random.Range(1, possibleTiles -1);
-        
-        goblinPrefab.GetComponent<Creatures.Creature>().activeTile = tiles[x];
-        Instantiate(goblinPrefab);
-
-        creatureController.PositionCharacterOnTile(goblinPrefab.GetComponent<Creatures.Creature>(), tiles[x]);
 
     }
 

@@ -10,8 +10,10 @@ namespace Creatures
         public OverlayTile activeTile;
         public OverlayTile targetTile;
         public OverlayTile previousTile;
+        public OverlayTile reservedTile;
         public bool pathRequest;
         public bool moving;
+        public bool lockOnTile;
         List<string> movementTypes;
         List<string> inventory;
 

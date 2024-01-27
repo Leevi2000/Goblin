@@ -183,7 +183,7 @@ public class PathFinder
     /// <returns></returns>
     public bool CheckIfPassable(OverlayTile tile, List<string> movementTypes)
     {
-        if (!movementTypes.Contains(tile.tileType) || tile.occupied)
+        if (!movementTypes.Contains(tile.tileType) || tile.occupied || tile.reserved)
         {
             return false;
         }

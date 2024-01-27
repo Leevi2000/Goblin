@@ -22,38 +22,36 @@ public class CreatureController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
-
-
-
-
-
-
-
-
-        //FixCreaturePositioning(creatureList);
+        // Refreshes list of creatures in controllers creatureList
         RefreshCreatureList(creatureList);
 
-        
+        // Checking for possible creature movement requests.
         foreach (Creatures.Creature creature in creatureList)
         {
             CheckPathRequests(creature);
         }
 
+        // Going through the pathlist containing
+        // creature path handling and movement.
         ProcessPathlist();
-
 
     }
 
-
+    /// <summary>
+    /// Makes creature move on it's path given by the pathfinding algorithm.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="path"></param>
     private void MoveAlongPath(Creatures.Creature character, List<OverlayTile> path)
     {
         var step = character.normalspeed * Time.deltaTime;
 
+        // Starts moving towards next tile (first element in the path list)
         var zIndex = path[0].transform.position.z;
         character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, step);
         character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
 
+        // When the creature is close enough to the new tile, position it precisely on new tile and remove current tile from path.
         if (Vector2.Distance(character.transform.position, path[0].transform.position) < 0.0001f)
         {
             PositionCharacterOnTile(character, path[0]);
@@ -62,40 +60,46 @@ public class CreatureController : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Places the creature on precise point over the tile. Also changes the creature's active tile. 
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="tile"></param>
     public void PositionCharacterOnTile(Creatures.Creature character, OverlayTile tile)
     {
         character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
 
-
-        // Aktiiviseksi tileksi tulee uusi tile
-        //character.activeTile.occupied = false;
+        // As the creature is on the tile, creature's properties are be updated!
         character.previousTile = character.activeTile;
-        
         character.activeTile = tile;
-
-        // Uusi tile tulee olemaan occupied
-        //tile.occupied = true;
-        
-        
     }
 
+    /// <summary>
+    /// Will generate and set new paths for creatures that have pathRequest as true.
+    /// </summary>
+    /// <param name="creature"></param>
     private void CheckPathRequests(Creatures.Creature creature)
     {
 
+        // Checking creature path request status.
         if (creature.pathRequest)
         {
             List<string> a = new List<string> { "grass", "grass_slab" };
+
+            // New list for future path
             List<OverlayTile> path = new List<OverlayTile>();
            
+            // If there's already existing path, remove it.
+            // Previous path will be replaced with a new one later on. 
             if (pathList.ContainsKey(creature))
             {
                 pathList.Remove(creature);
             }
-            // If creature should begin moving, find path and make status changes for creature
+            // If the desired location differs from the current one, initiate pathfinding process:
             if (creature.targetTile != creature.activeTile)
             {
+                
                 path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
                 pathList.Add(creature, path);
 
@@ -104,16 +108,26 @@ public class CreatureController : MonoBehaviour
             }
 
             creature.pathRequest = false;
-            
+
+            if (creature.reservedTile != null)
+            {
+                creature.reservedTile.reserved = false;
+                creature.reservedTile = null;
+            }
         }
     }
 
+    /// <summary>
+    /// Refreshes list of creatures in controllers creatureList
+    /// </summary>
+    /// <param name="creatureList"></param>
     private void RefreshCreatureList(List<Creatures.Creature> creatureList)
     {
         // Get all creatures and new creatures to the creatureList
         var objectArray = FindObjectsOfType<Creatures.Creature>();
         foreach (var i in objectArray)
         {
+            // If the list doesn't contain observed creature, add it to the list.
             if (!creatureList.Contains(i))
             {
                 creatureList.Add(i);
@@ -146,66 +160,123 @@ public class CreatureController : MonoBehaviour
        // }
     }
 
+    /// <summary>
+    /// Goes through the pathList, handles creature movement.
+    /// </summary>
     private void ProcessPathlist()
     {
-        // Makes the character to move along desired path and choosing a new path if destination becomes blocked.   
-        foreach (Creatures.Creature creature in pathList.Keys)
-        {
+        int maxPathAltercations = 25;
+        int pathAltercations = 0;
 
+        // Makes the character to move along desired path and choosing a new path if destination becomes blocked.   
+        foreach (Creatures.Creature creature in pathList.Keys.ToList())
+        {
+            // Setting the current creature's path to the path variable
             List<OverlayTile> path = pathList[creature];
+
+            // If path is greater than 0, it means the creature isn't at its desired destination yet.
+            // 
             if (path.Count > 0)
             {
-                List<string> a = new List<string> { "grass", "grass_slab" };
-                if (path.Count < 5 && !pathFinder.CheckIfPassable(path[path.Count - 1], a))
+                
+                var endTile = path[path.Count - 1];
+
+
+                // If end tile is reserved to a current creature, no need to check target tile.
+                if (endTile.reserved && endTile.reservedTo == creature)
                 {
-                    //path = pathFinder.FindPath(creature.activeTile, creature.targetTile, a);
-                    int i = 0;
-                    bool x = true;
-                    while (x || i < 10)
-                    {
 
-                        if (path[path.Count - 1].occupied)
-                        {
-                            var passable = pathFinder.FindClosestPassable(creature.activeTile, creature.targetTile, a);
-                            path = pathFinder.FindPath(creature.activeTile, passable, a);
-
-                            if (path.Count == 0)
-                            {
-
-                                path.Add(creature.activeTile);
-
-                            }
-
-
-                        }
-                        else
-                        {
-                            x = false;
-                        }
-
-                        i++;
-                    }
-
-                    pathList[creature] = path;
                 }
+                else
+                {
+                  
+                    NearTargetProcedure(creature, path, endTile);
+                    pathAltercations++;
+                  
+
+                }
+
+                    
+                
                 MoveAlongPath(creature, path);
 
+
             }
+            // When path doesn't contain elements, the creature has arrived at the target destination
             else
             {
+                // Character doesn't need to be moved, so remove it from pathList dictionary.
                 pathList.Remove(creature);
-                Debug.Log("Removed creature from pathlist");
                 PositionCharacterOnTile(creature, creature.activeTile);
 
-
-                if (path.Count == 0)
+                // Update creature properties.
+                creature.activeTile.occupied = true;
+                creature.moving = false;
+                if (creature.reservedTile != null)
                 {
-                    creature.activeTile.occupied = true;
-                    creature.moving = false;
+                    creature.reservedTile.reserved = false;
+                    creature.reservedTile = null;
                 }
+             
+
+                    // Maybe it should be checked there aren't any other creatures on current tile as the last line of preventing odd behaviour.
+                
             }
         }
 
+    }
+
+    /// <summary>
+    /// Prevents creatures from walking on same tile and also optimizes mass movement.
+    /// </summary>
+    /// <param name="creature"></param>
+    /// <param name="path"></param>
+    /// <param name="endTile"></param>
+    private void NearTargetProcedure(Creatures.Creature creature ,List<OverlayTile> path, OverlayTile endTile)
+    {
+        List<string> a = new List<string> { "grass", "grass_slab" };
+
+        // When the creature comes closer to the target destination, check if tile is still allowed as end tile.
+        // This is to prevent several creatures stopping on same tile.
+        if (path.Count < 7 && !pathFinder.CheckIfPassable(endTile, a))
+        {
+
+            int i = 0;
+            bool x = true;
+            while (x || i < 10)
+            {
+                endTile = path[path.Count - 1];
+
+                // If end tile has become occupied or reserved by another creature, find a path to the closest unoccupied tile:
+                if (endTile.occupied)
+                {
+                    var passable = pathFinder.FindClosestPassable(creature.activeTile, creature.targetTile, a);
+                    path = pathFinder.FindPath(creature.activeTile, passable, a);
+
+                    // When assigning new path, it is possible that the character will move back to previous tile. 
+                    // This handles that occurence.
+                    if (path.Count == 0)
+                    {
+                        path.Add(creature.activeTile);
+                        endTile.reservedTo = creature;
+                        //endTile.reserved = true;
+                        creature.reservedTile = endTile;
+                    }
+                }
+                else
+                {
+                    endTile.reservedTo = creature;
+                    creature.reservedTile = endTile;
+                    endTile.reserved = true;
+                    
+                    x = false;
+                }
+
+                i++;
+            }
+
+            pathList[creature] = path;
+        }
     }
 
 }

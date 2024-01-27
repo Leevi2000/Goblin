@@ -19,6 +19,13 @@ public class OverlayTile : MonoBehaviour
     public bool passable;
     public bool occupied;
 
+    // For certain occasions, for optimization:
+    public Creatures.Creature reservedTo;
+    public bool reserved;
+
+    const float RESERVATION_TIME = 5;
+    public float reservationTimer;
+
     // Makes backtracking of tiles possible in pathfinder. 
     // Is used to construct the final path.
     public OverlayTile previous;
@@ -28,6 +35,11 @@ public class OverlayTile : MonoBehaviour
 
     bool tileOnDebugMode = false;
 
+    private void Start()
+    {
+        reservationTimer = RESERVATION_TIME;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -35,6 +47,12 @@ public class OverlayTile : MonoBehaviour
         //{
         //    HideTile();
         //}
+        if(reserved)
+        {
+            ReservationTimer();
+        }
+
+
 
         if (!tileOnDebugMode)
         {
@@ -69,6 +87,17 @@ public class OverlayTile : MonoBehaviour
     {
         tileOnDebugMode = true;
         gameObject.GetComponent<SpriteRenderer>().color = col;
+    }
+
+    public void ReservationTimer()
+    {
+        reservationTimer = reservationTimer - Time.deltaTime;
+
+        if (reservationTimer < 0)
+        {
+            reservationTimer = RESERVATION_TIME;
+            reserved = false;
+        }
     }
 
 }
