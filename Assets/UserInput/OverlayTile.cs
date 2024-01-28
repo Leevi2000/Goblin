@@ -43,24 +43,15 @@ public class OverlayTile : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //if(Input.GetMouseButtonDown(0))
-        //{
-        //    HideTile();
-        //}
+
         if(reserved)
         {
             ReservationTimer();
         }
 
-
-
         if (!tileOnDebugMode)
         {
-            Color col = gameObject.GetComponent<SpriteRenderer>().color;
-            if (gameObject.GetComponent<SpriteRenderer>().color.a > 0)
-            {
-                gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, col.a - 0.01f);
-            }
+            FadeOutTile();
         }
         
     }
@@ -80,7 +71,7 @@ public class OverlayTile : MonoBehaviour
     }
 
     /// <summary>
-    /// Enables debug flag on tile
+    /// Enables debug flag on tile.
     /// </summary>
     /// <param name="col"></param>
     public void SetColor(Color col)
@@ -89,6 +80,9 @@ public class OverlayTile : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().color = col;
     }
 
+    /// <summary>
+    /// If tile has been reserved for too long, make it available again.
+    /// </summary>
     public void ReservationTimer()
     {
         reservationTimer = reservationTimer - Time.deltaTime;
@@ -99,5 +93,18 @@ public class OverlayTile : MonoBehaviour
             reserved = false;
         }
     }
+
+    /// <summary>
+    /// Fades tile colour over time
+    /// </summary>
+    public void FadeOutTile()
+    {
+        Color col = gameObject.GetComponent<SpriteRenderer>().color;
+        if (gameObject.GetComponent<SpriteRenderer>().color.a > 0)
+        {
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, col.a - 0.01f);
+        }
+    }
+        
 
 }

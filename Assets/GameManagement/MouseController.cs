@@ -11,7 +11,6 @@ public class MouseController : MonoBehaviour
 
     public List<Creatures.Creature> creatureList = new List<Creatures.Creature>();
     
-
     // Start is called before the first frame update
     void Start()
     {
@@ -85,6 +84,10 @@ public class MouseController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Shoots a raycast on mouse position to get a tile to focus on.
+    /// </summary>
+    /// <returns></returns>
     public RaycastHit2D? GetFocusedOnTile()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

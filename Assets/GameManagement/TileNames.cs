@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class TileNames
 {
-    //Trees:
+    // This is supposed to serve as an module to ease adding new tile types
+    // and simplify path type logic to work as tiletypes rather than tile names.
+    // This way a creature can be easily set to have certain movement types, and
+    // tile names will be taken into the needed list by the provided method.
+
     string[] trees = {
         "tree_1"
     };
