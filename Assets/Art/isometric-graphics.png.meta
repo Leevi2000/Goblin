@@ -171,13 +171,13 @@ TextureImporter:
       name: Tree1
       rect:
         serializedVersion: 2
-        x: 78
-        y: 143
-        width: 44
-        height: 64
+        x: 77
+        y: 116
+        width: 47
+        height: 86
       alignment: 9
-      pivot: {x: 0.48844564, y: 0.1}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5090994, y: 0.0786792}
+      border: {x: 0, y: 4, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0

@@ -61,7 +61,7 @@ public class MouseController : MonoBehaviour
                 if (hit.transform.tag == "Creature")
                 {
                     Creatures.Creature creature = hit.transform.gameObject.GetComponent<Creatures.Creature>();
-                    creature.activeTile = overlayTile;
+                    creature.ActiveTile = overlayTile;
                     creatureList.Add(creature);
                 }
                 
@@ -75,8 +75,8 @@ public class MouseController : MonoBehaviour
 
                 foreach (var creature in creatureList)
                 {
-                    creature.targetTile = overlayTile;
-                    creature.pathRequest = true;
+                    creature.TargetTile = overlayTile;
+                    creature.PathRequest = true;
                 }
             }
 
@@ -107,7 +107,7 @@ public class MouseController : MonoBehaviour
     {
         character.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 0.0001f, tile.transform.position.z);
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
-        character.activeTile = tile;
+        character.ActiveTile = tile;
     }
 
 }

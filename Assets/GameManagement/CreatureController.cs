@@ -44,7 +44,7 @@ public class CreatureController : MonoBehaviour
     /// <param name="path"></param>
     private void MoveAlongPath(Creatures.Creature character, List<OverlayTile> path)
     {
-        var step = character.normalspeed * Time.deltaTime;
+        var step = character.NormalSpeed * Time.deltaTime;
 
         // Starts moving towards next tile (first element in the path list)
         var zIndex = path[0].transform.position.z;
@@ -71,8 +71,8 @@ public class CreatureController : MonoBehaviour
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
 
         // As the creature is on the tile, creature's properties are be updated!
-        character.previousTile = character.activeTile;
-        character.activeTile = tile;
+        character.PreviousTile = character.ActiveTile;
+        character.ActiveTile = tile;
     }
 
     /// <summary>
@@ -83,9 +83,9 @@ public class CreatureController : MonoBehaviour
     {
 
         // Checking creature path request status.
-        if (creature.pathRequest)
+        if (creature.PathRequest)
         {
-            List<string> movementTypes = creature.movementTypeTileNames;
+            List<string> movementTypes = creature.MovementTypeTileNames;
 
             // New list for future path
             List<OverlayTile> path = new List<OverlayTile>();
@@ -97,22 +97,22 @@ public class CreatureController : MonoBehaviour
                 pathList.Remove(creature);
             }
             // If the desired location differs from the current one, initiate pathfinding process:
-            if (creature.targetTile != creature.activeTile)
+            if (creature.TargetTile != creature.ActiveTile)
             {
                 
-                path = pathFinder.FindPath(creature.activeTile, creature.targetTile, movementTypes);
+                path = pathFinder.FindPath(creature.ActiveTile, creature.TargetTile, movementTypes);
                 pathList.Add(creature, path);
 
-                creature.activeTile.occupied = false;
-                creature.moving = true;
+                creature.ActiveTile.occupied = false;
+                creature.Moving = true;
             }
 
-            creature.pathRequest = false;
+            creature.PathRequest = false;
 
-            if (creature.reservedTile != null)
+            if (creature.ReservedTile != null)
             {
-                creature.reservedTile.reserved = false;
-                creature.reservedTile = null;
+                creature.ReservedTile.reserved = false;
+                creature.ReservedTile = null;
             }
         }
     }
@@ -169,15 +169,15 @@ public class CreatureController : MonoBehaviour
             {
                 // Character doesn't need to be moved anymore, so remove it from pathList dictionary.
                 pathList.Remove(creature);
-                PositionCharacterOnTile(creature, creature.activeTile);
+                PositionCharacterOnTile(creature, creature.ActiveTile);
 
                 // Update creature properties.
-                creature.activeTile.occupied = true;
-                creature.moving = false;
-                if (creature.reservedTile != null)
+                creature.ActiveTile.occupied = true;
+                creature.Moving = false;
+                if (creature.ReservedTile != null)
                 {
-                    creature.reservedTile.reserved = false;
-                    creature.reservedTile = null;
+                    creature.ReservedTile.reserved = false;
+                    creature.ReservedTile = null;
                 }
             }
         }
@@ -192,7 +192,7 @@ public class CreatureController : MonoBehaviour
     /// <param name="endTile"></param>
     private void NearTargetProcedure(Creatures.Creature creature ,List<OverlayTile> path, OverlayTile endTile)
     {
-        List<string> movementTypes = creature.movementTypeTileNames;
+        List<string> movementTypes = creature.MovementTypeTileNames;
 
         // When the creature comes closer to the target destination, check if tile is still allowed as end tile.
         // This is to prevent several creatures stopping on same tile.
@@ -208,22 +208,22 @@ public class CreatureController : MonoBehaviour
                 // If end tile has become occupied or reserved by another creature, find a path to the closest unoccupied tile:
                 if (endTile.occupied)
                 {
-                    var passable = pathFinder.FindClosestPassable(creature.activeTile, creature.targetTile, movementTypes);
-                    path = pathFinder.FindPath(creature.activeTile, passable, movementTypes);
+                    var passable = pathFinder.FindClosestPassable(creature.ActiveTile, creature.TargetTile, movementTypes);
+                    path = pathFinder.FindPath(creature.ActiveTile, passable, movementTypes);
 
                     // When assigning new path, it is possible that the character will move back to previous tile. 
                     // This handles that occurence.
                     if (path.Count == 0)
                     {
-                        path.Add(creature.activeTile);
+                        path.Add(creature.ActiveTile);
                         endTile.reservedTo = creature;
-                        creature.reservedTile = endTile;
+                        creature.ReservedTile = endTile;
                     }
                 }
                 else
                 {
                     endTile.reservedTo = creature;
-                    creature.reservedTile = endTile;
+                    creature.ReservedTile = endTile;
                     endTile.reserved = true;
                     
                     x = false;

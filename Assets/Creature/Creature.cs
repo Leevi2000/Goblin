@@ -8,27 +8,30 @@ namespace Creatures
     {
         // Variables that are used in pathfinding and pathfinding optimization:
 
-        public OverlayTile activeTile;
-        public OverlayTile targetTile;
-        public OverlayTile previousTile;
-        public OverlayTile reservedTile;
+        [SerializeField] private OverlayTile activeTile;
+        [SerializeField] private OverlayTile targetTile;
+        [SerializeField] private OverlayTile previousTile;
+        [SerializeField] private OverlayTile reservedTile;
 
-        public bool pathRequest;
-        public bool moving;
+        [SerializeField] private bool pathRequest;
 
-        List<string> movementTypes = new List<string> { "land" };
-        public List<string> movementTypeTileNames = new List<string>();
-        TileNames tileNames = new TileNames();
+        [SerializeField] private bool moving;
+
+        private List<string> movementTypes = new List<string> { "land" };
+        private List<string> movementTypeTileNames = new List<string>();
+        private TileNames tileNames = new TileNames();
 
         // -------------------------------------
 
         // Variables that are used as creature's properties:
 
-        public float normalspeed;
-        float attackRadius;
-        int hp;
+        [SerializeField]  private float normalSpeed;
+        [SerializeField]  float attackRadius;
+        [SerializeField]  int hp;
 
-        List<string> inventory;
+        List<string> _inventory;
+
+        
 
         void CheckActions()
         {
@@ -54,6 +57,18 @@ namespace Creatures
             }
         }
 
+
+
+        public OverlayTile ActiveTile { get => activeTile; set => activeTile = value; }
+        public OverlayTile TargetTile { get => targetTile; set => targetTile = value; }
+        public OverlayTile PreviousTile { get => previousTile; set => previousTile = value; }
+        public OverlayTile ReservedTile { get => reservedTile; set => reservedTile = value; }
+        public bool PathRequest { get => pathRequest; set => pathRequest = value; }
+        public bool Moving { get => moving; set => moving = value; }
+        public List<string> MovementTypes { get => movementTypes; set => movementTypes = value; }
+        public List<string> MovementTypeTileNames { get => movementTypeTileNames; set => movementTypeTileNames = value; }
+        public TileNames TileNames { get => tileNames; set => tileNames = value; }
+        public float NormalSpeed { get => normalSpeed; set => normalSpeed = value; }
     }
 }
 
