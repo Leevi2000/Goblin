@@ -102,15 +102,16 @@ public class PathFinder
         return finishedList;
     }
     
-    private int GetManhattanDistance(OverlayTile start, OverlayTile neighbour)
+    private double GetManhattanDistance(OverlayTile start, OverlayTile neighbour)
     {
         // Adds a bit of variation to the chosen path.
-        float randMultiplier = 1;
+        double randMultiplier = 1;
         var x = UnityEngine.Random.Range(1, 100);
-        if (x < 10)
+        if (x < 5)
             randMultiplier = UnityEngine.Random.Range(0.2f, 5f);
 
-        int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
+        //int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
+        double dist = randMultiplier * (Math.Sqrt(Math.Pow(start.gridLocation.x - neighbour.gridLocation.x,2) + Math.Pow(start.gridLocation.y - neighbour.gridLocation.y,2)));
         return dist;
     }
 
@@ -137,17 +138,16 @@ public class PathFinder
             neighbours.Add(map[locationToCheck]);
         }
 
-        //bottom
+        //top-right
         locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x,
-            currentOverlayTile.gridLocation.y - 1
+            currentOverlayTile.gridLocation.x + 1,
+            currentOverlayTile.gridLocation.y + 1
             );
 
         if (map.ContainsKey(locationToCheck))
         {
             neighbours.Add(map[locationToCheck]);
         }
-
 
         //right
         locationToCheck = new Vector2Int(
@@ -160,11 +160,54 @@ public class PathFinder
             neighbours.Add(map[locationToCheck]);
         }
 
+        //bottom-right
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x + 1,
+            currentOverlayTile.gridLocation.y - 1
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            neighbours.Add(map[locationToCheck]);
+        }
+
+        //bottom
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x,
+            currentOverlayTile.gridLocation.y - 1
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            neighbours.Add(map[locationToCheck]);
+        }
+
+        //bottom-left
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x - 1,
+            currentOverlayTile.gridLocation.y - 1
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            neighbours.Add(map[locationToCheck]);
+        }
 
         //left
         locationToCheck = new Vector2Int(
             currentOverlayTile.gridLocation.x - 1,
             currentOverlayTile.gridLocation.y
+            );
+
+        if (map.ContainsKey(locationToCheck))
+        {
+            neighbours.Add(map[locationToCheck]);
+        }
+
+        //top-left
+        locationToCheck = new Vector2Int(
+            currentOverlayTile.gridLocation.x - 1,
+            currentOverlayTile.gridLocation.y + 1
             );
 
         if (map.ContainsKey(locationToCheck))

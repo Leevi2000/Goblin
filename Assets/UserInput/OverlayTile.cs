@@ -5,10 +5,10 @@ using UnityEngine;
 public class OverlayTile : MonoBehaviour
 {
     // G, H, F are for pathfinding to store distances between start - tile and end - tile.
-    public int G;
-    public int H;
+    public double G;
+    public double H;
 
-    public int F { get { return G + H; } }
+    public double F { get { return G + H; } }
 
     // isBlocked should be removed and replaced with tiletype string
     // to identify if a character with certain properties can pass on the tile. 
