@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class MouseController : MonoBehaviour
 {
-    // These two should be removed
-    //public GameObject characterPrefab;
-    //private Creatures.Creature character;
-
+    // List of creatures currently selected.
     public List<Creatures.Creature> creatureList = new List<Creatures.Creature>();
-    
+
+    // Current tile mouse is hovering on:
+    OverlayTile overlayTile = new OverlayTile();
+
+    // Information about raycast from screen to mouse point
+    RaycastHit2D? focusedTileHit = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,65 +23,25 @@ public class MouseController : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        var focusedTileHit = GetFocusedOnTile();
-
+        
+        UpdateMouseOnTile();
 
         if (focusedTileHit.HasValue)
         {
-            OverlayTile overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
-            transform.position = overlayTile.transform.position;
-            gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder+1;
-
-
             // Select all creatures
             if (Input.GetKey(KeyCode.Z))
-            {
-                creatureList.Clear();
-                var creatures = GameObject.FindGameObjectsWithTag("Creature");
-                foreach (var creature in creatures)
-                    creatureList.Add(creature.GetComponent<Creatures.Creature>());
-
-                Debug.Log("Selected all creatures!");
-            }
+                SelectAllCreatures();
+            
 
             //Find out how to register if raycast hits goblin
             if (Input.GetMouseButtonDown(0))
-            {
-                if (!Input.GetKey(KeyCode.LeftShift))
-                {
-                    creatureList.Clear();
-                }
-                foreach(var creature in creatureList)
-                {
-                    Debug.Log(creature.name);
-                }
-                
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                Physics.Raycast(ray, out hit, 1000);
-
-                Debug.Log(hit.transform.tag);
-                if (hit.transform.tag == "Creature")
-                {
-                    Creatures.Creature creature = hit.transform.gameObject.GetComponent<Creatures.Creature>();
-                    creature.ActiveTile = overlayTile;
-                    creatureList.Add(creature);
-                }
-                
-               
-            }
+                SelectCreature();
+            
 
             //For moving / setting a command at mouse position
             if (Input.GetMouseButtonDown(1))
-            {
-                overlayTile.ShowTile();
-
-                foreach (var creature in creatureList)
-                {
-                    creature.TargetTile = overlayTile;
-                    creature.PathRequest = true;
-                }
-            }
+                MoveSelected();
+            
 
         }
 
@@ -110,4 +73,68 @@ public class MouseController : MonoBehaviour
         character.ActiveTile = tile;
     }
 
+    /// <summary>
+    /// Selects all creatures. Mainly for testing purposes.
+    /// </summary>
+    private void SelectAllCreatures()
+    {
+        creatureList.Clear();
+        var creatures = GameObject.FindGameObjectsWithTag("Creature");
+        foreach (var creature in creatures)
+            creatureList.Add(creature.GetComponent<Creatures.Creature>());
+
+        Debug.Log("Selected all creatures!");
+    }
+
+    /// <summary>
+    /// Selects creature/creatures adding them to creaturelist
+    /// </summary>
+    private void SelectCreature()
+    {
+
+        if (!Input.GetKey(KeyCode.LeftShift))
+        {
+            creatureList.Clear();
+        }
+        foreach (var creature in creatureList)
+        {
+            Debug.Log(creature.name);
+        }
+
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out hit, 1000);
+
+        Debug.Log(hit.transform.tag);
+        if (hit.transform.tag == "Creature")
+        {
+            Creatures.Creature creature = hit.transform.gameObject.GetComponent<Creatures.Creature>();
+            creature.ActiveTile = overlayTile;
+            creatureList.Add(creature);
+        }
+
+    }
+
+    /// <summary>
+    /// Updates the details about the tile mouse is pointing at.
+    /// </summary>
+    private void UpdateMouseOnTile()
+    {
+        focusedTileHit = GetFocusedOnTile();
+        overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
+        transform.position = overlayTile.transform.position;
+        gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
+    }
+
+    
+    private void MoveSelected()
+    {
+        overlayTile.ShowTile();
+
+        foreach (var creature in creatureList)
+        {
+            creature.TargetTile = overlayTile;
+            creature.PathRequest = true;
+        }
+    }
 }

@@ -108,7 +108,7 @@ public class PathFinder
         double randMultiplier = 1;
         var x = UnityEngine.Random.Range(1, 100);
         if (x < 5)
-            randMultiplier = UnityEngine.Random.Range(0.2f, 5f);
+            randMultiplier = UnityEngine.Random.Range(2f, 5f);
 
         //int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
         double dist = randMultiplier * (Math.Sqrt(Math.Pow(start.gridLocation.x - neighbour.gridLocation.x,2) + Math.Pow(start.gridLocation.y - neighbour.gridLocation.y,2)));
