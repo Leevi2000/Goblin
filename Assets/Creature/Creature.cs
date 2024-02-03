@@ -16,7 +16,7 @@ namespace Creatures
         [SerializeField] private bool pathRequest;
 
         [SerializeField] private bool moving;
-
+        
         private List<string> movementTypes = new List<string> { "land" };
         private List<string> movementTypeTileNames = new List<string>();
         private TileNames tileNames = new TileNames();

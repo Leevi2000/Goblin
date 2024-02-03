@@ -231,8 +231,8 @@ MonoBehaviour:
   COL_Occupied: {r: 1, g: 0, b: 0, a: 1}
   COL_CreaturePath: {r: 1, g: 0.6953363, b: 0.0047169924, a: 1}
   COL_Reserved: {r: 0.78751564, g: 0, b: 1, a: 1}
-  Show_Occupied: 1
-  Show_CreaturePath: 1
+  Show_Occupied: 0
+  Show_CreaturePath: 0
   Show_Reserved: 0
 --- !u!1 &413032647
 GameObject:

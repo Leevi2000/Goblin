@@ -121,7 +121,10 @@ public class MouseController : MonoBehaviour
     private void UpdateMouseOnTile()
     {
         focusedTileHit = GetFocusedOnTile();
+        if(focusedTileHit == null)
+            return;
         overlayTile = focusedTileHit.Value.collider.gameObject.GetComponent<OverlayTile>();
+
         transform.position = overlayTile.transform.position;
         gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
     }
