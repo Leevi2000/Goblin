@@ -1,45 +1,64 @@
+/* Animator Script
+ * 
+ * Changes creature sprites and equipments based on current location.
+ * 
+ * Handling certain action animations should be added later in development.
+ * 
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Animator : MonoBehaviour
 {
-   // private GameObject gameObject;
+
     private Creatures.Creature creature;
 
-
+    // Used for determining character rotation
+    // -------------------
     private Vector2 oldPos;
     private Vector2 newPos;
+    // -------------------
+
+    // Default pointing direction is South
     [SerializeField]
     private string pointingAt = "S";
+
+    // Body sprites
     SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite[] directionSprites;
+
+    // Armor sprites
+    SpriteRenderer armorSpriteHelmet;
+    SpriteRenderer armorSpriteChestplate;
+    SpriteRenderer armorSpriteTrousers;
+
+    SpriteRenderer itemSprite;
 
 
     // Start is called before the first frame update
     void Start()
     {
-       // gameObject = this.GetComponent<GameObject>();
+        //
         creature = this.GetComponent<Creatures.Creature>();
         oldPos = this.transform.position;
         spriteRenderer = this.GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-        if (creature.Moving)
-        {
-            newPos = this.transform.position;
-            pointingAt = CalculateDirection(oldPos, newPos);
-            oldPos = newPos;
-
-            UpdateSprite();
-        }
+        ApplyRotationChanges();
     }
 
 
-
+    /// <summary>
+    /// Calculates direction changes between two vector positions and
+    /// returns movement orientation.
+    /// </summary>
+    /// <param name="pos1"></param>
+    /// <param name="pos2"></param>
+    /// <returns></returns>
     private string CalculateDirection(Vector2 pos1, Vector2 pos2)
     {
         Vector2 newDir = (pos2 - pos1).normalized;
@@ -108,8 +127,12 @@ public class Animator : MonoBehaviour
         return "S";
     }
 
+    /// <summary>
+    /// Updates sprite changes
+    /// </summary>
     private void UpdateSprite()
     {
+        // NOTE: Maybe use struct instead?
         Dictionary<string, int> map = new Dictionary<string, int>
         {
             { "S", 0 },
@@ -122,8 +145,25 @@ public class Animator : MonoBehaviour
             { "SE", 7 }
         };
 
+        // Changing sprite based on direction
         var spriteIndex = map[pointingAt];
         spriteRenderer.sprite = directionSprites[spriteIndex];
-        
     }
+
+    /// <summary>
+    /// If creature is moving, observe changes in direction and
+    /// and change sprite respectively.
+    /// </summary>
+    private void ApplyRotationChanges()
+    {
+        if (creature.Moving)
+        {
+            newPos = this.transform.position;
+            pointingAt = CalculateDirection(oldPos, newPos);
+            oldPos = newPos;
+
+            UpdateSprite();
+        }
+    }
+
 }
