@@ -15,12 +15,6 @@ public class PathFinder
     /// <returns></returns>
     public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end, List<string> movementTypes)
     {
-        // If the tile is not passable, find a closest passable tile. Set it as end tile. 
-        if(!CheckIfPassable(end, movementTypes))
-        {
-            end = FindClosestPassable(start, end, movementTypes);
-        }
-
         // openList contains tiles that have not been processed yet.
         List<OverlayTile> openList = new List<OverlayTile>();
 
@@ -29,6 +23,12 @@ public class PathFinder
         List<OverlayTile> closedList = new List<OverlayTile>();
 
         openList.Add(start);
+
+        // If the tile is not passable, find a closest passable tile. Set it as end tile. 
+        if (!CheckIfPassable(end, movementTypes))
+        {
+            end = FindClosestPassable(start, end, movementTypes);
+        }
 
         while (openList.Count > 0)
         {
