@@ -31,13 +31,15 @@ public class MouseController : MonoBehaviour
             // Select all creatures
             if (Input.GetKey(KeyCode.Z))
                 SelectAllCreatures();
-            
+
 
             //Find out how to register if raycast hits goblin
             if (Input.GetMouseButtonDown(0))
+            {
                 SelectCreature();
-            
+            }
 
+            
             //For moving / setting a command at mouse position
             if (Input.GetMouseButtonDown(1))
                 MoveSelected();
@@ -45,6 +47,16 @@ public class MouseController : MonoBehaviour
 
         }
 
+    }
+
+    public void UnselectAll()
+    {
+        foreach(var creature in creatureList)
+        {
+            creature.GetComponent<SpriteRenderer>().material.SetColor("_OutlineColor", Color.black);
+        }
+
+        creatureList.Clear();     
     }
 
     /// <summary>
@@ -81,7 +93,11 @@ public class MouseController : MonoBehaviour
         creatureList.Clear();
         var creatures = GameObject.FindGameObjectsWithTag("Creature");
         foreach (var creature in creatures)
+        {
             creatureList.Add(creature.GetComponent<Creatures.Creature>());
+            creature.GetComponent<SpriteRenderer>().material.SetColor("_OutlineColor", Color.white);
+        }
+            
 
         Debug.Log("Selected all creatures!");
     }
@@ -94,24 +110,25 @@ public class MouseController : MonoBehaviour
 
         if (!Input.GetKey(KeyCode.LeftShift))
         {
-            creatureList.Clear();
-        }
-        foreach (var creature in creatureList)
-        {
-            Debug.Log(creature.name);
+            UnselectAll();
         }
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out hit, 1000);
-
-        Debug.Log(hit.transform.tag);
-        if (hit.transform.tag == "Creature")
+        try
         {
-            Creatures.Creature creature = hit.transform.gameObject.GetComponent<Creatures.Creature>();
-            creature.ActiveTile = overlayTile;
-            creatureList.Add(creature);
+            if (hit.transform.tag == "Creature")
+            {
+                Creatures.Creature creature = hit.transform.gameObject.GetComponent<Creatures.Creature>();
+                creature.ActiveTile = overlayTile;
+                creatureList.Add(creature);
+
+                // Change creature outline color
+                creature.GetComponent<SpriteRenderer>().material.SetColor("_OutlineColor", Color.white);
+            }
         }
+        catch { }
 
     }
 
