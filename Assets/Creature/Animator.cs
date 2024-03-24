@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Animator : MonoBehaviour
 {
@@ -40,7 +41,8 @@ public class Animator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //
+        directionSprites = Resources.LoadAll<Sprite>("Goblin/Directions/directions");
+
         creature = this.GetComponent<Creatures.Creature>();
         oldPos = this.transform.position;
         spriteRenderer = this.GetComponent<SpriteRenderer>();
@@ -135,14 +137,14 @@ public class Animator : MonoBehaviour
         // NOTE: Maybe use struct instead?
         Dictionary<string, int> map = new Dictionary<string, int>
         {
-            { "S", 0 },
-            { "SW", 1 },
-            { "W", 2 },
-            { "NW", 3 },
-            { "N", 4 },
-            { "NE", 5 },
-            { "E", 6 },
-            { "SE", 7 }
+            { "S", 1 },
+            { "SW", 2 },
+            { "W", 3 },
+            { "NW", 4 },
+            { "N", 5 },
+            { "NE", 6 },
+            { "E", 7 },
+            { "SE", 0 }
         };
 
         // Changing sprite based on direction
