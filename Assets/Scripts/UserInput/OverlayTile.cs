@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OverlayTile : MonoBehaviour
+public class OverlayTile : MonoBehaviour, IHeapItem<OverlayTile>
 {
     // G, H, F are for pathfinding to store distances between start - tile and end - tile.
     public double G;
@@ -49,10 +49,10 @@ public class OverlayTile : MonoBehaviour
             ReservationTimer();
         }
 
-        if (!tileOnDebugMode)
-        {
-            FadeOutTile();
-        }
+        //if (!tileOnDebugMode)
+        //{
+        //    FadeOutTile();
+        //}
         
     }
     /// <summary>
@@ -105,6 +105,21 @@ public class OverlayTile : MonoBehaviour
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, col.a - 0.01f);
         }
     }
-        
+
+    // Heap index property required by IHeapItem<T> interface
+    public int HeapIndex { get; set; }
+
+    // Comparing function for heap ordering (GPT CODE)
+    public int CompareTo(OverlayTile other)
+    {
+        // Compare tiles based on their F score
+        int compare = F.CompareTo(other.F);
+        if (compare == 0)
+        {
+            // If F scores are equal, compare based on H score (tiebreaker)
+            compare = H.CompareTo(other.H);
+        }
+        return -compare; // Negative because heaps are typically min-heaps
+    }
 
 }

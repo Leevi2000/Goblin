@@ -41,7 +41,7 @@ public class Animator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        directionSprites = Resources.LoadAll<Sprite>("Goblin/Directions/directions");
+        directionSprites = Resources.LoadAll<Sprite>(ResourcePointer.GOBLIN_IDLE_DIRECTIONS);
 
         creature = this.GetComponent<Creatures.Creature>();
         oldPos = this.transform.position;

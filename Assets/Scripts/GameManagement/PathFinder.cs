@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Tilemaps;
 using System;
 
 public class PathFinder
@@ -15,12 +16,22 @@ public class PathFinder
     /// <returns></returns>
     public List<OverlayTile> FindPath(OverlayTile start, OverlayTile end, List<string> movementTypes)
     {
+        if(start == null)
+        {
+            Debug.Log("Given start tile is null");
+            return null;
+        }
         // openList contains tiles that have not been processed yet.
-        List<OverlayTile> openList = new List<OverlayTile>();
+        //List<OverlayTile> openList = new List<OverlayTile>();
+
+        var x = GameObject.Find("Grid").GetComponent<MapManager>().GetComponentInChildren<Tilemap>().cellBounds;
+        var size = Math.Abs(x.yMin) + Math.Abs(x.yMax) * Math.Abs(x.xMax) + Math.Abs(x.xMin) * Math.Abs(x.zMax) + Math.Abs(x.zMin);
+
+        Heap<OverlayTile> openList = new Heap<OverlayTile>(size);
 
         // closedList contains processed tiles.
         // It will be used to skip already processed tiles.
-        List<OverlayTile> closedList = new List<OverlayTile>();
+        HashSet<OverlayTile> closedList = new HashSet<OverlayTile>();
 
         openList.Add(start);
 
@@ -30,14 +41,15 @@ public class PathFinder
             end = FindClosestPassable(start, end, movementTypes);
         }
 
+        
         while (openList.Count > 0)
         {
             // Set tile with the shortest distance between start and end point as the current tile.
-            OverlayTile currentOverlayTile = openList.OrderBy(x => x.F).First();
+            OverlayTile currentOverlayTile = openList.RemoveFirst();
 
             // As the code is now processing the tile from openList, remove it from openList and add into closedList.
             // (closedList will contain only tiles of the desired path)
-            openList.Remove(currentOverlayTile);
+            //openList.RemoveFirst();
             closedList.Add(currentOverlayTile);
 
             if(currentOverlayTile == end)
@@ -122,97 +134,30 @@ public class PathFinder
     /// <returns></returns>
     private List<OverlayTile> GetNeighbourTiles(OverlayTile currentOverlayTile)
     {
-        // Get information of all tiles 
-        var map = MapManager.Instance.map;
+        // Debug line, should be removed later on.
+        //GameObject.Find("GameManager").GetComponent<PathCalculationCounter>().counter++;
 
+        var map = MapManager.Instance.map;
         List<OverlayTile> neighbours = new List<OverlayTile>();
 
-        //top
-        Vector2Int locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x, 
-            currentOverlayTile.gridLocation.y + 1
-            );
-
-        if (map.ContainsKey(locationToCheck))
+        for (int xOffset = -1; xOffset <= 1; xOffset++)
         {
-            neighbours.Add(map[locationToCheck]);
-        }
+            for (int yOffset = -1; yOffset <= 1; yOffset++)
+            {
+                // Skip the current tile itself
+                if (xOffset == 0 && yOffset == 0)
+                    continue;
 
-        //top-right
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x + 1,
-            currentOverlayTile.gridLocation.y + 1
-            );
+                Vector2Int locationToCheck = new Vector2Int(
+                    currentOverlayTile.gridLocation.x + xOffset,
+                    currentOverlayTile.gridLocation.y + yOffset
+                );
 
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //right
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x + 1,
-            currentOverlayTile.gridLocation.y
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //bottom-right
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x + 1,
-            currentOverlayTile.gridLocation.y - 1
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //bottom
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x,
-            currentOverlayTile.gridLocation.y - 1
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //bottom-left
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x - 1,
-            currentOverlayTile.gridLocation.y - 1
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //left
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x - 1,
-            currentOverlayTile.gridLocation.y
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
-        }
-
-        //top-left
-        locationToCheck = new Vector2Int(
-            currentOverlayTile.gridLocation.x - 1,
-            currentOverlayTile.gridLocation.y + 1
-            );
-
-        if (map.ContainsKey(locationToCheck))
-        {
-            neighbours.Add(map[locationToCheck]);
+                if (map.ContainsKey(locationToCheck))
+                {
+                    neighbours.Add(map[locationToCheck]);
+                }
+            }
         }
 
         return neighbours;
@@ -242,7 +187,11 @@ public class PathFinder
 
         List<OverlayTile> possibleCandidates = new List<OverlayTile>();
 
-        OverlayTile closestNeighbour = null;
+
+
+        OverlayTile temporaryTile = new OverlayTile();
+        temporaryTile.gridLocation = new Vector3Int(-999, -999, -999);
+        OverlayTile closestNeighbour = temporaryTile;
 
         // Goes through neighbours, returns one, if passable. Else continues to search for further tiles.
         while(true)
@@ -266,7 +215,7 @@ public class PathFinder
                 foreach (var neighbour in possibleCandidates)
                 {
 
-                    if (closestNeighbour == null)
+                    if (closestNeighbour == temporaryTile)
                     {
                         closestNeighbour = neighbour;
                         continue;
@@ -308,6 +257,47 @@ public class PathFinder
                 return null;
             }
         }
+
+    }
+
+    public void ChunkMatrix(int chunkSize, Vector2 offset)
+    {
+
+    }
+
+    /// <summary>
+    /// Checks if creature can traverse from chunk entry point to possible endpoint.
+    /// Between two faces of the chunk with the given movement type.
+    /// </summary>
+    private void CheckChunkPassable(Vector2 chunkPos, int chunkSize, List<string> movementTypes, StructLibrary.ChunkTraverseOrientation movementDirection)
+    {
+        var bounds = GameObject.Find("Grid").GetComponent<MapManager>().GetComponentInChildren<Tilemap>().cellBounds;
+
+        Vector2 offset = new Vector2(0 - bounds.x, 0 - bounds.y);
+
+
+        var centerTileCoordinates = ((chunkPos.x * chunkSize + 1) - offset.x,
+                                     (chunkPos.y * chunkSize + 1) - offset.y);
+
+        //Dictionary<int, int> locationsToLightUp =
+        //{
+        //    ]
+        //};
+
+
+
+        // Check for blocked faces:
+        
+
+
+    }
+
+    /// <summary>
+    /// Returns all neighboring chunks.
+    /// </summary>
+    /// <param name="chunkPos"></param>
+    private void GetNeighbourChunks(Vector2 chunkPos)
+    {
 
     }
 

@@ -44,9 +44,12 @@ public class ExperimentalGoblinSpawner : MonoBehaviour
 
             var x = UnityEngine.Random.Range(1, possibleTiles - 1);
 
-            goblinPrefab.GetComponent<Creatures.Creature>().ActiveTile = tiles[x];
-            goblinPrefab.GetComponent<Creatures.Creature>().TargetTile = tiles[x];
+
             Instantiate(goblinPrefab);
+
+            goblinPrefab.GetComponent<Creatures.Creature>().ActiveTile = tiles[x];
+            //goblinPrefab.GetComponent<Creatures.Creature>().PreviousTile = tiles[x];
+            goblinPrefab.GetComponent<Creatures.Creature>().TargetTile = tiles[x];
 
             creatureController.PositionCharacterOnTile(goblinPrefab.GetComponent<Creatures.Creature>(), tiles[x]);
 
