@@ -12,6 +12,27 @@ public class TileDebugger : MonoBehaviour
     public bool Show_CreaturePath;
     public bool Show_Reserved;
 
+    public void EnablePath()
+    {
+        Show_Occupied = true;
+        Show_CreaturePath = true;
+        Show_Reserved = false;
+    }
+
+    public void EnableReserved()
+    {
+        Show_Occupied = false;
+        Show_CreaturePath = false;
+        Show_Reserved = true;
+    }
+
+    public void DisablePathDebug()
+    {
+        Show_Occupied = false;
+        Show_CreaturePath = false;
+        Show_Reserved = false;
+    }
+
     // Update is called once per frame
     void Update()
     {

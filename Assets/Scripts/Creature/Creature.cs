@@ -31,7 +31,11 @@ namespace Creatures
 
         List<string> _inventory;
 
-        
+        // Used for pathfinding and decisionmaking
+        float timerInitialValue = 1f;
+        float timer;
+        // on timerHit, all other scripts can do desired event
+        bool timerHit = false;
 
         void CheckActions()
         {
@@ -46,6 +50,7 @@ namespace Creatures
         private void Start()
         {
             movementTypeTileNames = tileNames.ReturnTilenamesByMovementType(movementTypes);
+            timer = timerInitialValue;
         }
 
         private void Update()
@@ -55,6 +60,18 @@ namespace Creatures
             {
                 previousTile = activeTile;
             }
+
+            timer -= Time.deltaTime;
+            if(timer < 0)
+            {
+                timerHit = true;
+                timer = timerInitialValue;
+            }
+            else
+            {
+                timerHit = false;
+            }
+
         }
 
 
@@ -69,6 +86,7 @@ namespace Creatures
         public List<string> MovementTypeTileNames { get => movementTypeTileNames; set => movementTypeTileNames = value; }
         public TileNames TileNames { get => tileNames; set => tileNames = value; }
         public float NormalSpeed { get => normalSpeed; set => normalSpeed = value; }
+        public bool TimerHit { get => timerHit; set => timerHit = value; }
     }
 }
 

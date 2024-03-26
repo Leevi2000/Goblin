@@ -49,11 +49,11 @@ public class OverlayTile : MonoBehaviour, IHeapItem<OverlayTile>
             ReservationTimer();
         }
 
-        //if (!tileOnDebugMode)
-        //{
-        //    FadeOutTile();
-        //}
-        
+        if (!tileOnDebugMode)
+        {
+            FadeOutTile();
+        }
+
     }
     /// <summary>
     /// Shows white tile and disables debug flag on tile.

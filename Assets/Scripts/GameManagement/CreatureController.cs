@@ -8,27 +8,35 @@ public class CreatureController : MonoBehaviour
 
     List<Creatures.Creature> creatureList = new List<Creatures.Creature>();
 
+
     
     public Dictionary<Creatures.Creature,List<OverlayTile>> pathList = new Dictionary<Creatures.Creature, List<OverlayTile>>();
 
-    private PathFinder pathFinder = new PathFinder();
+    public PathFinder pathFinder;
 
-    float tickrate;
+    float tickrate = 17;
+    float timer;
+
 
     private void Start()
     {
-
+       pathFinder = gameObject.GetComponentInChildren<PathFinder>();
+        timer = 60 / 60 / tickrate;
     }
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Refreshes list of creatures in controllers creatureList
-        RefreshCreatureList(creatureList);
+        timer -= Time.deltaTime;
 
-        // Checking for possible creature movement requests.
-        foreach (Creatures.Creature creature in creatureList)
+        if (timer <= 0)
         {
-            CheckPathRequests(creature);
+            // Refreshes list of creatures in controllers creatureList
+            RefreshCreatureList(creatureList);
+
+            // Checking for possible creature movement requests.
+            CheckPathRequests(creatureList);
+            
+            timer = 60 / 60 / tickrate;
         }
 
         // Going through the pathlist containing
@@ -45,9 +53,17 @@ public class CreatureController : MonoBehaviour
     private void MoveAlongPath(Creatures.Creature character, List<OverlayTile> path)
     {
         var step = character.NormalSpeed * Time.deltaTime;
-
+        float zIndex;
         // Starts moving towards next tile (first element in the path list)
-        var zIndex = path[0].transform.position.z;
+        
+        if(path.Count == 0)
+        {
+            return;
+        }
+
+        zIndex = path[0].transform.position.z;
+        
+        
         character.transform.position = Vector2.MoveTowards(character.transform.position, path[0].transform.position, step);
         character.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, zIndex);
 
@@ -79,40 +95,50 @@ public class CreatureController : MonoBehaviour
     /// Will generate and set new paths for creatures that have pathRequest as true.
     /// </summary>
     /// <param name="creature"></param>
-    private void CheckPathRequests(Creatures.Creature creature)
+    private void CheckPathRequests(List<Creatures.Creature> creatureList)
     {
+        // How many path requests per tick can the script process.
+        int requestCap = 10;
+        int requests = 0;
 
-        // Checking creature path request status.
-        if (creature.PathRequest)
+        // Checking creature path request status
+        foreach (Creatures.Creature creature in creatureList)
         {
-            List<string> movementTypes = creature.MovementTypeTileNames;
+            if (creature.PathRequest)
+            {
+                List<string> movementTypes = creature.MovementTypeTileNames;
 
-            // New list for future path
-            List<OverlayTile> path = new List<OverlayTile>();
-           
-            // If there's already existing path, remove it.
-            // Previous path will be replaced with a new one later on. 
-            if (pathList.ContainsKey(creature))
-            {
-                pathList.Remove(creature);
-            }
-            // If the desired location differs from the current one, initiate pathfinding process:
-            if (creature.TargetTile != creature.ActiveTile)
-            {
+                // New list for future path
+                List<OverlayTile> path = new List<OverlayTile>();
+
+                // If there's already existing path, remove it.
+                // Previous path will be replaced with a new one later on. 
+                if (pathList.ContainsKey(creature))
+                {
+                    pathList.Remove(creature);
+                }
+
+                //creature.TargetTile != creature.ActiveTile &&
+                // If the desired location differs from the current one, initiate pathfinding process:
+                if ((requests < requestCap))
+                {
+                    path = pathFinder.FindPath(creature.ActiveTile, creature.TargetTile, movementTypes);
+                    pathList.Add(creature, path);
+
+                    creature.ActiveTile.occupied = false;
+                    creature.Moving = true;
+
+                    requests++;
+                    creature.PathRequest = false;
+                }
+
                 
-                path = pathFinder.FindPath(creature.ActiveTile, creature.TargetTile, movementTypes);
-                pathList.Add(creature, path);
 
-                creature.ActiveTile.occupied = false;
-                creature.Moving = true;
-            }
-
-            creature.PathRequest = false;
-
-            if (creature.ReservedTile != null)
-            {
-                creature.ReservedTile.reserved = false;
-                creature.ReservedTile = null;
+                if (creature.ReservedTile != null)
+                {
+                    creature.ReservedTile.reserved = false;
+                    creature.ReservedTile = null;
+                }
             }
         }
     }
@@ -140,6 +166,10 @@ public class CreatureController : MonoBehaviour
     /// </summary>
     private void ProcessPathlist()
     {
+        
+
+        int targetProcedureCap = 1;
+        int proceduresStarted = 0;
         // Makes the character to move along desired path and chooses a new path if destination becomes blocked.   
         foreach (Creatures.Creature creature in pathList.Keys.ToList())
         {
@@ -152,12 +182,17 @@ public class CreatureController : MonoBehaviour
                 var endTile = path[path.Count - 1];
 
                 // If end tile is reserved to a current creature, no need to check target tile.
-                if (endTile.reserved && endTile.reservedTo == creature)
+                if (endTile.reserved && endTile.reservedTo == creature && !creature.TimerHit)
                 {
 
                 }
                 else
                 {
+                    if (timer >= 0)
+                    {
+                        //MoveAlongPath(creature, path);
+                        //continue;
+                    }
                     NearTargetProcedure(creature, path, endTile);
                 }
  
@@ -190,7 +225,7 @@ public class CreatureController : MonoBehaviour
     /// <param name="creature"></param>
     /// <param name="path"></param>
     /// <param name="endTile"></param>
-    private void NearTargetProcedure(Creatures.Creature creature ,List<OverlayTile> path, OverlayTile endTile)
+    private void NearTargetProcedure(Creatures.Creature creature, List<OverlayTile> path, OverlayTile endTile)
     {
         List<string> movementTypes = creature.MovementTypeTileNames;
 
