@@ -11,12 +11,14 @@ public class TileDebugger : MonoBehaviour
     public bool Show_Occupied;
     public bool Show_CreaturePath;
     public bool Show_Reserved;
+    public bool Show_CreaturesOnTileList;
 
     public void EnablePath()
     {
         Show_Occupied = true;
         Show_CreaturePath = true;
         Show_Reserved = false;
+        Show_CreaturesOnTileList = false;
     }
 
     public void EnableReserved()
@@ -24,6 +26,7 @@ public class TileDebugger : MonoBehaviour
         Show_Occupied = false;
         Show_CreaturePath = false;
         Show_Reserved = true;
+        Show_CreaturesOnTileList = false;
     }
 
     public void DisablePathDebug()
@@ -31,6 +34,16 @@ public class TileDebugger : MonoBehaviour
         Show_Occupied = false;
         Show_CreaturePath = false;
         Show_Reserved = false;
+        Show_CreaturesOnTileList = false;
+        FadeOutAllTiles();
+    }
+
+    public void EnableLitCreatureTiles()
+    {
+        Show_Occupied = false;
+        Show_CreaturePath = false;
+        Show_Reserved = false;
+        Show_CreaturesOnTileList = true;
     }
 
     // Update is called once per frame
@@ -46,6 +59,45 @@ public class TileDebugger : MonoBehaviour
         if(Show_Reserved)
             ShowReservedTiles();
 
+
+        if (Show_CreaturesOnTileList)
+            LitTileListTiles();
+
+    }
+
+    void LitTileListTiles()
+    {
+        var tiles = GetComponentsInChildren<OverlayTile>();
+
+        foreach (var tile in tiles)
+        {
+            if (tile.creaturesOnTile.Count == 0)
+            {
+                tile.SetColor(Color.green);
+            }
+
+            if (tile.creaturesOnTile.Count == 1)
+            {
+                tile.SetColor(Color.yellow);
+            }
+
+            if (tile.creaturesOnTile.Count == 1)
+            {
+                tile.SetColor(Color.black);
+            }
+
+
+        }
+    }
+
+    void FadeOutAllTiles()
+    {
+        var tiles = GetComponentsInChildren<OverlayTile>();
+
+        foreach (var tile in tiles)
+        {
+            tile.tileOnDebugMode = false;
+        }
     }
 
     /// <summary>

@@ -12,6 +12,7 @@ namespace Creatures
         [SerializeField] private OverlayTile targetTile;
         [SerializeField] private OverlayTile previousTile;
         [SerializeField] private OverlayTile reservedTile;
+        [SerializeField] public bool lightUpActiveTile_DBG = false;
 
         [SerializeField] private bool pathRequest;
 
@@ -32,7 +33,7 @@ namespace Creatures
         List<string> _inventory;
 
         // Used for pathfinding and decisionmaking
-        float timerInitialValue = 1f;
+        float timerInitialValue = 0.05f;
         float timer;
         // on timerHit, all other scripts can do desired event
         bool timerHit = false;
@@ -70,6 +71,11 @@ namespace Creatures
             else
             {
                 timerHit = false;
+            }
+
+            if(lightUpActiveTile_DBG)
+            {
+                activeTile.SetColor(Color.blue);
             }
 
         }

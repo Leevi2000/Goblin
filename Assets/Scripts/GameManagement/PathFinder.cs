@@ -11,6 +11,7 @@ public class PathFinder : MonoBehaviour
     Dictionary<OverlayTile, float> CLOSEST_PASSABLE_processedTiles = new Dictionary<OverlayTile, float>();
     float TILE_LIFETIME = 30;
     int BOUNDS_SIZE = 0;
+    BoundsInt BOUNDS;
 
     float MAP_REFRESH_TIMER_VALUE = 5f;
     float MAP_REFRESH_TIMER = 0f;
@@ -18,6 +19,7 @@ public class PathFinder : MonoBehaviour
     private void Start()
     {
         var x = GameObject.Find("Grid").GetComponent<MapManager>().GetComponentInChildren<Tilemap>().cellBounds;
+        BOUNDS = x;
         BOUNDS_SIZE = Math.Abs(x.yMin) + Math.Abs(x.yMax) * Math.Abs(x.xMax) + Math.Abs(x.xMin) * Math.Abs(x.zMax) + Math.Abs(x.zMin);
         MAP = MapManager.Instance.map;
     }
@@ -157,9 +159,9 @@ public class PathFinder : MonoBehaviour
     {
         // Adds a bit of variation to the chosen path.
         double randMultiplier = 1;
-        var x = UnityEngine.Random.Range(1, 100);
+        var x = UnityEngine.Random.Range(1, 120);
         if (x < 2)
-            randMultiplier = UnityEngine.Random.Range(2f, 5f);
+            randMultiplier = UnityEngine.Random.Range(2f, 3f);
 
         //int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
         double dist = randMultiplier * (Math.Sqrt(Math.Pow(start.gridLocation.x - neighbour.gridLocation.x,2) + Math.Pow(start.gridLocation.y - neighbour.gridLocation.y,2)));
@@ -192,6 +194,9 @@ public class PathFinder : MonoBehaviour
                     currentOverlayTile.gridLocation.y + yOffset
                 );
 
+                if (locationToCheck.x < BOUNDS.xMin || locationToCheck.x > BOUNDS.xMax || locationToCheck.y < BOUNDS.yMin || locationToCheck.y > BOUNDS.yMax)
+                    continue;
+
                 // Maybe try catch isn't as costly as comparing dictionary.
                 try
                 {
@@ -214,7 +219,7 @@ public class PathFinder : MonoBehaviour
     /// <returns></returns>
     public bool CheckIfPassable(OverlayTile tile, List<string> movementTypes)
     {
-        if (!movementTypes.Contains(tile.tileType) || tile.occupied || tile.reserved)
+        if (!movementTypes.Contains(tile.tileType) || tile.occupied || tile.reserved || tile.creaturesOnTile.Count() > 0)
         {
             return false;
         }
@@ -238,7 +243,7 @@ public class PathFinder : MonoBehaviour
 
         int cap = 0;
         // Goes through neighbours, returns one, if passable. Else continues to search for further tiles.
-        while(cap < 10000)
+        while(cap < 1000)
         {
             int setCount = neighbours.Count;
             for(int i = 0; i < setCount; i++)

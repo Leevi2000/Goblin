@@ -14,7 +14,7 @@ public class CreatureController : MonoBehaviour
 
     public PathFinder pathFinder;
 
-    float tickrate = 17;
+    float tickrate = 15;
     float timer;
 
 
@@ -87,8 +87,11 @@ public class CreatureController : MonoBehaviour
         character.GetComponent<SpriteRenderer>().sortingOrder = tile.GetComponent<SpriteRenderer>().sortingOrder;
 
         // As the creature is on the tile, creature's properties are be updated!
+        character.ActiveTile.creaturesOnTile.Remove(character);
         character.PreviousTile = character.ActiveTile;
         character.ActiveTile = tile;
+        character.ActiveTile.creaturesOnTile.Add(character);
+
     }
 
     /// <summary>
@@ -122,8 +125,23 @@ public class CreatureController : MonoBehaviour
                 // If the desired location differs from the current one, initiate pathfinding process:
                 if ((requests < requestCap))
                 {
-                    path = pathFinder.FindPath(creature.ActiveTile, creature.TargetTile, movementTypes);
-                    pathList.Add(creature, path);
+                    if(creature.ActiveTile != creature.TargetTile)
+                    {
+                        path = pathFinder.FindPath(creature.ActiveTile, creature.TargetTile, movementTypes);
+                        pathList.Add(creature, path);
+
+                        if (!creature.Moving)
+                        {
+                            try
+                            {
+                                creature.ActiveTile.creaturesOnTile.Remove(creature);
+                            } catch { }
+                            
+                        }
+                    }
+
+
+
 
                     creature.ActiveTile.occupied = false;
                     creature.Moving = true;
@@ -138,6 +156,16 @@ public class CreatureController : MonoBehaviour
                 {
                     creature.ReservedTile.reserved = false;
                     creature.ReservedTile = null;
+                }
+            }
+            else
+            {
+                // Prevents spamclick abuse to freeze goblin between tiles
+                if(creature.Moving && !pathList.ContainsKey(creature))
+                {
+                    var newEndTile = pathFinder.FindClosestPassable(creature.ActiveTile, creature.ActiveTile, creature.MovementTypeTileNames);
+                    pathList[creature] = pathFinder.FindPath(creature.ActiveTile, newEndTile, creature.MovementTypeTileNames);
+                    creature.ActiveTile.creaturesOnTile.Remove(creature);
                 }
             }
         }
@@ -166,10 +194,6 @@ public class CreatureController : MonoBehaviour
     /// </summary>
     private void ProcessPathlist()
     {
-        
-
-        int targetProcedureCap = 1;
-        int proceduresStarted = 0;
         // Makes the character to move along desired path and chooses a new path if destination becomes blocked.   
         foreach (Creatures.Creature creature in pathList.Keys.ToList())
         {
@@ -188,11 +212,6 @@ public class CreatureController : MonoBehaviour
                 }
                 else
                 {
-                    if (timer >= 0)
-                    {
-                        //MoveAlongPath(creature, path);
-                        //continue;
-                    }
                     NearTargetProcedure(creature, path, endTile);
                 }
  
@@ -202,10 +221,28 @@ public class CreatureController : MonoBehaviour
             // When path list doesn't contain anything, the creature has arrived at the target destination
             else
             {
-                // Character doesn't need to be moved anymore, so remove it from pathList dictionary.
+
+                // Checking if creature can still stay on end tile
+                if (creature.ActiveTile.creaturesOnTile.Count() > 0 && creature.ActiveTile.creaturesOnTile[0] != creature)
+                {
+                    foreach (var c in creature.ActiveTile.creaturesOnTile)
+                    {
+                        // If creature is not moving, it means they are SET ON the tile. Not crossing through it
+                        if(!c.Moving)
+                        {
+                            var newEndTile = pathFinder.FindClosestPassable(creature.ActiveTile, creature.ActiveTile, creature.MovementTypeTileNames);
+                            path = pathFinder.FindPath(creature.ActiveTile, newEndTile, creature.MovementTypeTileNames);
+
+                            // Overriding current path information
+                            pathList[creature] = path;
+                            continue;
+                        }
+                    }
+
+                }
                 pathList.Remove(creature);
                 PositionCharacterOnTile(creature, creature.ActiveTile);
-
+                
                 // Update creature properties.
                 creature.ActiveTile.occupied = true;
                 creature.Moving = false;

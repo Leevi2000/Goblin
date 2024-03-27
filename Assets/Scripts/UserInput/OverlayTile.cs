@@ -23,6 +23,9 @@ public class OverlayTile : MonoBehaviour, IHeapItem<OverlayTile>
     public Creatures.Creature reservedTo;
     public bool reserved;
 
+    // Should be only one, certain cases will be fixed by observing list members.
+    public List<Creatures.Creature> creaturesOnTile;
+
     const float RESERVATION_TIME = 5;
     public float reservationTimer;
 
@@ -33,7 +36,7 @@ public class OverlayTile : MonoBehaviour, IHeapItem<OverlayTile>
     public Vector3Int gridLocation;
 
 
-    bool tileOnDebugMode = false;
+    public bool tileOnDebugMode = false;
 
     private void Start()
     {
@@ -53,6 +56,7 @@ public class OverlayTile : MonoBehaviour, IHeapItem<OverlayTile>
         {
             FadeOutTile();
         }
+
 
     }
     /// <summary>
@@ -105,6 +109,8 @@ public class OverlayTile : MonoBehaviour, IHeapItem<OverlayTile>
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, col.a - 0.01f);
         }
     }
+
+
 
     // Heap index property required by IHeapItem<T> interface
     public int HeapIndex { get; set; }
