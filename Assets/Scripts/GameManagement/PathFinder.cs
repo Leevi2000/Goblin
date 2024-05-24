@@ -63,8 +63,6 @@ public class PathFinder : MonoBehaviour
         // openList contains tiles that have not been processed yet.
         //List<OverlayTile> openList = new List<OverlayTile>();
 
-
-
         Heap<OverlayTile> openList = new Heap<OverlayTile>(BOUNDS_SIZE);
 
         // closedList contains processed tiles.

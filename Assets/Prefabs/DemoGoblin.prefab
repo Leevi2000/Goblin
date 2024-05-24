@@ -215,9 +215,10 @@ MonoBehaviour:
   targetTile: {fileID: 0}
   previousTile: {fileID: 0}
   reservedTile: {fileID: 0}
+  lightUpActiveTile_DBG: 0
   pathRequest: 0
   moving: 0
-  normalSpeed: 2
+  normalSpeed: 10
   attackRadius: 0
   hp: 0
 --- !u!114 &6294272257098627821

@@ -21,6 +21,10 @@ public class TileNames
         "water"
     };
 
+    string[] structures = {
+        "house"
+    };
+
     /// <summary>
     /// Returns a set of tilenames a creature with a certain movement type can travel on.
     /// </summary>
@@ -46,6 +50,11 @@ public class TileNames
                     tileNames.AddRange(lands);
                     tileNames.AddRange(water);
                     tileNames.AddRange(trees);
+                    tileNames.AddRange(structures);
+                    break;
+
+                case "structure":
+                    tileNames.AddRange(structures);
                     break;
             }
         }
