@@ -11,7 +11,7 @@ public class PathFinder : MonoBehaviour
     Dictionary<OverlayTile, float> CLOSEST_PASSABLE_processedTiles = new Dictionary<OverlayTile, float>();
     float TILE_LIFETIME = 30;
     int BOUNDS_SIZE = 0;
-    BoundsInt BOUNDS;
+    public BoundsInt BOUNDS;
 
     float MAP_REFRESH_TIMER_VALUE = 5f;
     float MAP_REFRESH_TIMER = 0f;

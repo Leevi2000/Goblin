@@ -19,18 +19,31 @@ namespace Creatures
         [SerializeField] private bool moving;
         
         private List<string> movementTypes = new List<string> { "land" };
+
+        /// <summary>
+        /// List of tilenames creature can walk on
+        /// </summary>
         private List<string> movementTypeTileNames = new List<string>();
+
         private TileNames tileNames = new TileNames();
 
         // -------------------------------------
 
         // Variables that are used as creature's properties:
+        string firstname;
+        string lastname;
 
-        [SerializeField]  private float normalSpeed;
-        [SerializeField]  float attackRadius;
-        [SerializeField]  int hp;
+        [SerializeField] private float normalSpeed;
+        [SerializeField] float attackRadius;
+        [SerializeField] int hp;
+        [SerializeField] private float defense;
+        [SerializeField] private float strength;
+        [SerializeField] private int wanderDistance;
 
         List<string> _inventory;
+
+        bool hostile;
+        bool living;
 
         // Used for pathfinding and decisionmaking
         float timerInitialValue = 0.05f;
@@ -93,6 +106,7 @@ namespace Creatures
         public TileNames TileNames { get => tileNames; set => tileNames = value; }
         public float NormalSpeed { get => normalSpeed; set => normalSpeed = value; }
         public bool TimerHit { get => timerHit; set => timerHit = value; }
+        public int WanderDistance { get => wanderDistance; set => wanderDistance = value; }
     }
 }
 

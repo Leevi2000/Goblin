@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 7933013317101198313}
   - component: {fileID: -8959299774748459270}
   - component: {fileID: 6294272257098627821}
+  - component: {fileID: -4942133711731256050}
   m_Layer: 0
   m_Name: DemoGoblin
   m_TagString: Creature
@@ -218,9 +219,23 @@ MonoBehaviour:
   lightUpActiveTile_DBG: 0
   pathRequest: 0
   moving: 0
-  normalSpeed: 10
+  normalSpeed: 3
   attackRadius: 0
   hp: 0
+  defense: 0
+  strength: 0
+  wanderDistance: 7
+  sadness: 0.4
+  happiness: 0.4
+  fear: 0.4
+  anger: 0.4
+  surprisement: 0.4
+  disgust: 0.4
+  tiredness: 0.4
+  hunger: 0.4
+  cleanliness: 0.4
+  sanity: 0.4
+  sickness: 0.4
 --- !u!114 &6294272257098627821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,3 +258,16 @@ MonoBehaviour:
   - {fileID: -1304910147, guid: b526b555ceb406b4596450ea26643237, type: 3}
   - {fileID: -314166575, guid: b526b555ceb406b4596450ea26643237, type: 3}
   - {fileID: -953747995, guid: b526b555ceb406b4596450ea26643237, type: 3}
+--- !u!114 &-4942133711731256050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7825142259757001318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94b383509090ffd4987640a76f457ef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: 6

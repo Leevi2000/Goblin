@@ -25,6 +25,16 @@ namespace Database.Communicator
             return goblinData.LoadGoblin(goblinId);
         }
 
+        public void CreateTask()
+        {
+
+        }
+
+        public void LoadTask(int goblinId)
+        {
+
+        }
+
 
     }
 }

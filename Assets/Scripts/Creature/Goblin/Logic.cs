@@ -1,73 +1,82 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Helper;
+using Helper.TilemapOperations;
 
 public class Logic : MonoBehaviour
 {
+    Creatures.Goblin goblinData;
+    [SerializeField] float timer = 6;
+    float timerStart = 6;
     // Start is called before the first frame update
     void Start()
     {
-        
+        goblinData = this.gameObject.GetComponent<Creatures.Goblin>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        timer -= Time.fixedDeltaTime;
 
+        if(timer < 0)
+        {
+            timer = timerStart + Random.Range(-2f, 2f);
+            if(goblinData.PathRequest == false && !goblinData.Moving)
+            {
+                SelectAction();
+            }
+        }    
+    }
 
     /// <summary>
     /// Action selection logic.
     /// </summary>
     public void SelectAction()
     {
-     
-
-        if(HostileNearby())
+        if (LogicHelper.HostileNearby(goblinData))
         {
 
         }
         else if (IsNight())
         {
-            
+
         }
-        else if (TirednessTresholdSurpassed())
+        else if (LogicHelper.TirednessThresholdSurpassed(goblinData))
+        {
+            // Go Find a house to sleep in
+        }
+        else if (LogicHelper.SicknessThresholdSurpassed(goblinData))
+        {
+            // Go find a house to rest in, preferably medicinal house
+        }
+        else if (LogicHelper.HungerThresholdSurpassed(goblinData))
+        {
+            // Go find food
+        }
+        else if (LogicHelper.AngerThresholdSurpassed(goblinData))
+        {
+            // Increases strength and
+        }
+        else if (LogicHelper.FearThresholdSurpassed(goblinData))
         {
 
         }
-        else if (SicknessTresholdSurpassed())
+        else if (LogicHelper.SadnessThresholdSurpassed(goblinData))
         {
 
         }
-        else if (HungerTresholdSurpassed())
+        else if (LogicHelper.DisgustThresholdSurpassed(goblinData))
         {
 
         }
-        else if (AngerTresholdSurpassed())
+        else if (LogicHelper.HappinessThresholdSurpassed(goblinData))
         {
 
         }
-        else if (FearTresholdSurpassed())
-        {
-
-        }
-        else if (SadnessTresholdSurpassed())
-        {
-
-        }
-        else if (DisgustTresholdSurpassed())
-        {
-
-        }
-        else if (HappinessTresholdSurpassed())
-        {
-
-        }
-
-
-
-
+        else
+            StartRandomWander(goblinData);
     }
 
 // Below are the actions goblin can take
@@ -132,10 +141,34 @@ public class Logic : MonoBehaviour
 
     }
 
+    private void StartRandomWander(Creatures.Creature creature)
+    {
+        var maxDistance = creature.WanderDistance;
+        var tiles = TilemapHelper.GetTilesAroundTarget(creature.ActiveTile, creature.WanderDistance);
+        List<OverlayTile> validTiles = new List<OverlayTile>();
+        // Delete all tiles from list where creature can't walk on.
+        foreach (var tile in tiles)
+        {
+            if (creature.MovementTypeTileNames.Contains(tile.tileType))
+                validTiles.Add(tile);
+        }
+
+        //Choose a random target tile
+        if(validTiles.Count > 0)
+        {
+            var index = UnityEngine.Random.Range(0, validTiles.Count);
+            creature.TargetTile = validTiles[index];
+            creature.PathRequest = true;
+        }
+        else
+        {
+            Debug.Log("Could not start wandering: Tile couldn't be found.");
+        }
+    }
 
 
 
-// Below are all the boolean checker methods for SelectAction() logic.
+    // Below are all the boolean checker methods for SelectAction() logic.
     public bool HostileNearby()
     {
         return false;

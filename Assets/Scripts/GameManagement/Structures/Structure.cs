@@ -11,6 +11,12 @@ public class Structure : MonoBehaviour
 
     [SerializeField] private string structureType;
 
+    private List<string> landTypes = new List<string> { "land" };
+    private List<string> buildableTiles;
+
+
     public string StructureType { get => structureType; set => structureType = value; }
     public int Size { get => size; set => size = value; }
+    public List<string> BuildableTiles { get => buildableTiles; set => buildableTiles = value; }
+    public List<string> LandTypes { get => landTypes; set => landTypes = value; }
 }

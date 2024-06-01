@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Tilemaps;
-
+using Helper.TilemapOperations;
 public class StructurePlacement : MonoBehaviour
 {
     [SerializeField]
@@ -25,6 +25,9 @@ public class StructurePlacement : MonoBehaviour
 
     public Structure selectedStructure = null;
     public StructureSelector structureSelector;
+
+    TileNames tileNames = new TileNames();
+
 
     bool canPlace = false;
 
@@ -84,6 +87,7 @@ public class StructurePlacement : MonoBehaviour
             if (pressedKey != Keybinds.DBG_ENTER_BUILD_MODE && keyInBinds)
             {
                 selectedStructure = structureSelector.GetStructure(pressedKey);
+                selectedStructure.BuildableTiles = tileNames.ReturnTilenamesByMovementType(selectedStructure.LandTypes);
                 keyInBinds = false;
             }
         }
@@ -144,38 +148,40 @@ public class StructurePlacement : MonoBehaviour
 
     private void UpdateStructurePlacement(Structure structure)
     {
+        bool badTileFound = false;
 
-        foreach(var tile in overlayTiles)
+        foreach (var tile in overlayTiles)
         {
             if(tile != null)
             {
                 tile.ShowTile();
             }
         }
-        overlayTiles.Clear();
 
-        var tilecoordinates = GenerateSquare(overlayTile.gridLocation.x, overlayTile.gridLocation.y, structure.Size);
+        overlayTiles = TilemapHelper.GetTilesAroundTarget(overlayTile, structure.Size);
 
-        foreach(var coord in tilecoordinates)
+        // If overlayTile count is less than the structure takes space, placement goes over boundaries and shouldn't be placed.
+        if(overlayTiles.Count != structure.Size*structure.Size)
         {
-            var pos = new Vector2Int(coord.x, coord.y);
-            var tile = MAP[pos];
-            overlayTiles.Add(tile);
+            foreach(var tile in overlayTiles)
+            {
+                tile.SetColor(Color.red);
+            }
+            canPlace = false;
+            badTileFound = true;
+
+            return;
         }
 
-        bool badTileFound = false;
+       
         int height = overlayTile.gridLocation.z;
+        
+        // Check tile building restrictions for each tile.
         foreach(var tile in overlayTiles)
         {
             if (tile != null)
-            {
-                if(tile.gridLocation.z != height)
-                {
-                    tile.SetColor(Color.red);
-                    canPlace = false;
-                    badTileFound = true;
-                }
-                else if(tile.tileType != overlayTile.tileType)
+            {   
+                if(!CheckIfAllowedTiletype(tile, structure) || tile.gridLocation.z != height) 
                 {
                     tile.SetColor(Color.red);
                     canPlace = false;
@@ -191,44 +197,19 @@ public class StructurePlacement : MonoBehaviour
         }
     }
 
-    public static List<(int x, int y)> GenerateSquare(int centerX, int centerY, int size)
+    bool CheckIfAllowedTiletype(OverlayTile tile, Structure structure)
     {
-        List<(int x, int y)> coordinates = new List<(int x, int y)>();
- 
-        int radius = (int)Mathf.Round(size / 2);
-
-        int minX = centerX - radius;
-        int maxX = centerX + radius;
-        int minY = centerY - radius;
-        int maxY = centerY + radius;
-
-        if (size % 2 == 0)
+        foreach(var tilename in structure.BuildableTiles)
         {
-            minX = centerX - radius + 1;
-            maxX = centerX + radius;
-            minY = centerY - radius + 1;
-            maxY = centerY + radius;
-        }
-        else
-        {
-            // Calculate the bounds of the square
-            minX = centerX - radius;
-            maxX = centerX + radius;
-            minY = centerY - radius;
-            maxY = centerY + radius;
-        }
-
-        // Loop through the bounds and add coordinates to the list
-        for (int x = minX; x <= maxX; x++)
-        {
-            for (int y = minY; y <= maxY; y++)
+            if (tilename == tile.tileType)
             {
-                coordinates.Add((x, y));
+                return true;
             }
         }
-
-        return coordinates;
+        return false;
     }
+
+    
     
 
 }
