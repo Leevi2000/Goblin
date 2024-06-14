@@ -219,7 +219,7 @@ MonoBehaviour:
   lightUpActiveTile_DBG: 0
   pathRequest: 0
   moving: 0
-  normalSpeed: 3
+  normalSpeed: 2
   attackRadius: 0
   hp: 0
   defense: 0

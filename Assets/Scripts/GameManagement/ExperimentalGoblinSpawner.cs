@@ -22,7 +22,16 @@ public class ExperimentalGoblinSpawner : MonoBehaviour
         if (!tilesGenerated)
         {
             tiles = GameObject.Find("OverlayContainer").GetComponentsInChildren<OverlayTile>();
-            tilesGenerated = true;
+            if(tiles.Length > 0)
+            {
+                //for (int i = 0; i < 15; i++)
+                //{
+                //    SummonGoblin();
+                //}
+                tilesGenerated = true;
+            }
+                
+
         }
 
 
@@ -57,6 +66,12 @@ public class ExperimentalGoblinSpawner : MonoBehaviour
 
     }
 
-
-
+    public void DeleteAllCreatures()
+    {
+        var creatures = GameObject.FindGameObjectsWithTag("Creature");
+        foreach (var creature in creatures)
+        {
+            Destroy(creature);
+        }    
+    }
 }

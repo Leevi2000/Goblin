@@ -16,7 +16,7 @@ public class Logic : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         timer -= Time.fixedDeltaTime;
 
