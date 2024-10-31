@@ -104,9 +104,9 @@ public class OverlayTile : MonoBehaviour, IHeapItem<OverlayTile>
     /// </summary>
     public void FadeOutTile()
     {
-        Color col = gameObject.GetComponent<SpriteRenderer>().color;
         if (gameObject.GetComponent<SpriteRenderer>().color.a > 0)
         {
+            Color col = gameObject.GetComponent<SpriteRenderer>().color;
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, col.a - 0.01f);
         }
     }

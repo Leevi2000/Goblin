@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class Jobs
 {
-    public static string[] jobList = {"woodcutting", "mining", "foraging", "building", "combat" };
+    public static string[] jobList = {"unemployed", "woodcutting", "mining", "foraging", "building", "combat" };
+    
 }
 public class Job
 {
     public const string UNEMPLOYED = "No assigned job";
-
-    public int _workId = -1;
+    // Default job is unemployed
+    public int _workId = 0;
     GameObject workSite;
 
     public override string ToString() 
@@ -30,7 +31,6 @@ public class Job
         {
             return UNEMPLOYED;
         }
-
         
     }
 

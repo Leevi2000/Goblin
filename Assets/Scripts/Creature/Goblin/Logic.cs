@@ -10,10 +10,10 @@ public class Logic : MonoBehaviour
     [SerializeField] float timer = 6;
     float timerStart = 6;
 
-    [SerializeField] float workTimer = 0;
-    [SerializeField] float workTreshold = 10;
-    [SerializeField] float workCooldown = 20;
-    [SerializeField] float coolDownTimer = 0;
+    [SerializeField] public float workTimer = 0;
+    [SerializeField] public float workTreshold = 10;
+    [SerializeField] public float workCooldown = 20;
+    [SerializeField] public float coolDownTimer = 0;
     OverlayTile workTile;
     // Start is called before the first frame update
     void Start()
@@ -31,6 +31,8 @@ public class Logic : MonoBehaviour
             if (coolDownTimer > workCooldown)
             {
                 workTimer = 0;
+                coolDownTimer = 0;
+                
             }
 
             timer = timerStart + Random.Range(-2f, 2f);
@@ -45,7 +47,7 @@ public class Logic : MonoBehaviour
             workTimer += Time.fixedDeltaTime;
             coolDownTimer = 0;
         }
-        else
+        else if(goblinData.job._workId != 0)
         {
             //Reset work timer after cooldown to start working again
             coolDownTimer += Time.fixedDeltaTime;
@@ -95,7 +97,7 @@ public class Logic : MonoBehaviour
         {
 
         }
-        else if (workTimer < workTreshold)
+        else if (workTimer < workTreshold && goblinData.job._workId != 0)
         {
             if(!goblinData.working)
             {
@@ -181,35 +183,39 @@ public class Logic : MonoBehaviour
     private void Work(Creatures.Goblin goblin)
     {
         Debug.Log("Initiating work");
-        if(workTile == null)
-        {
-            GetWorking(goblin);
-        }
+        //if(workTile == null)
+        //{
+        //    GetWorking(goblin);
+        //}
 
-        // If goblin is close enough to work site, begin working. 
-        if(TilemapHelper.GetManhattanDistance(goblin.ActiveTile, workTile) < 1)
-        {
-            // If there are other fitting jobs closer, begin working on those instead. (For example when current site depletes)
-            if(workTile != GameObject.Find("GameManager").GetComponent<JobFinder>().ReturnWork(goblin))
-            {
-                GetWorking(goblin);
-            }
-        }
-        else
-        {
-            goblin.TargetTile = workTile;
-            goblin.PathRequest = true;
-        }
+        //// If goblin is close enough to work site, begin working. 
+        //if(TilemapHelper.GetManhattanDistance(goblin.ActiveTile, workTile) < 1)
+        //{
+        //    // If there are other fitting jobs closer, begin working on those instead. (For example when current site depletes)
+        //    if(workTile != GameObject.Find("GameManager").GetComponent<JobFinder>().ReturnWork(goblin))
+        //    {
+        //        GetWorking(goblin);
+        //    }
+        //}
+        //else if(workTile != null)
+        //{
+        //    goblin.TargetTile = workTile;
+        //    goblin.PathRequest = true;
+        //}
 
-        workTile = GameObject.Find("GameManager").GetComponent<JobFinder>().ReturnWork(goblin);
-
+        //workTile = GameObject.Find("GameManager").GetComponent<JobFinder>().ReturnWork(goblin);
+        GetWorking(goblin);
     }
 
     void GetWorking(Creatures.Goblin goblin)
     {
         workTile = GameObject.Find("GameManager").GetComponent<JobFinder>().ReturnWork(goblin);
-        goblin.TargetTile = workTile;
-        goblin.PathRequest = true;
+        if(workTile != null)
+        {
+            goblin.TargetTile = workTile;
+            goblin.PathRequest = true;
+        }
+        
     }
 
     private void StartRandomWander(Creatures.Creature creature)

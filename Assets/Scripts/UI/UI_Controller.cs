@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 namespace UI
 {
@@ -46,12 +48,13 @@ namespace UI
         {
             var containerParent = GameObject.Find("UI_Canvas").transform.Find("CreatureSelector").transform.Find("CreatureSelectorScrollView").transform.Find("Viewport").transform.Find("Content");
 
+            GameObject.Find("UI_Canvas").transform.Find("CreaturesInList").GetComponent<TMPro.TextMeshProUGUI>().text = "Number of creatures in list: " + creatures.Count.ToString();
+
             // Destroy previous items/refresh
             foreach (Transform child in containerParent.transform)
             {
                 Destroy(child.gameObject);
             }
-
 
             foreach (Creatures.Goblin creature in creatures)
             {
@@ -72,12 +75,52 @@ namespace UI
             // Fill General panel
             var generalPanel = containerParent.Find("GeneralPanel");
             var textField = generalPanel.Find("GeneralInfo").GetComponent<TMPro.TextMeshProUGUI>();
-
+            var logic = goblin.gameObject.GetComponent<Logic>();
+            // Fill General Panel text information
             textField.text =
                 $"Name: {goblin.Firstname} {goblin.Lastname} \n" +
                 $"\t {goblin.Gender}, {goblin.Age} \n \n" +
-                $"Working: {goblin.working} \n \n";
+                $"Working: {goblin.working} \n \n" +
+                $"Worktimer: {logic.workTimer} of {logic.workTreshold} \n" +
+                $"Freetime: {logic.coolDownTimer} of {logic.workCooldown}";
 
+            // Fill JobDropDown with correct options
+            var dropDownElement = generalPanel.Find("JobDropDown").GetComponent<TMPro.TMP_Dropdown>();
+            dropDownElement.ClearOptions();
+
+            //Convert jobList array to list and add them as options
+            List<string> jobList = new List<string>(Jobs.jobList);
+            dropDownElement.AddOptions(jobList);
+
+            dropDownElement.onValueChanged.RemoveAllListeners();
+            dropDownElement.value = goblin.job._workId;
+
+           
+            dropDownElement.onValueChanged.AddListener(delegate { DropdownValueChanged(dropDownElement, goblin); });
+        }
+
+        void DropdownValueChanged(TMPro.TMP_Dropdown change, Creatures.Goblin goblin)
+        {
+            // Offsetting by 3
+            goblin.job._workId = change.value - 3;
+        }
+        
+        /// <summary>
+        /// Centers the camera to goblin and selects it in game 
+        /// </summary>
+        public void CenterToSelected()
+        {
+            if(selectedGoblin == null)
+            {
+                return;
+            }
+
+            var cam = GameObject.Find("Main Camera");
+            var mouseController = GameObject.Find("UserInput").transform.Find("Cursor").GetComponent<MouseController>();
+            mouseController.UnselectAll();
+            mouseController.creatureList.Add(selectedGoblin);
+            mouseController.SetOutline(selectedGoblin);
+            cam.transform.transform.position = new Vector3(selectedGoblin.transform.position.x - 2, selectedGoblin.transform.position.y, cam.transform.position.z);
         }
 
     }

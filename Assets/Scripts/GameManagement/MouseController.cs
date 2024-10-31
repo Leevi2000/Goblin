@@ -32,6 +32,12 @@ public class MouseController : MonoBehaviour
             if (Input.GetKey(KeyCode.Z))
                 SelectAllCreatures();
 
+            if (Input.GetKey(KeyCode.X))
+                SetAllAsWoodcutter();
+
+            if (Input.GetKey(KeyCode.C))
+                SetAllAsUnemployed();
+
 
             //Find out how to register if raycast hits goblin
             if (Input.GetMouseButtonDown(0))
@@ -102,6 +108,30 @@ public class MouseController : MonoBehaviour
         Debug.Log("Selected all creatures!");
     }
 
+    private void SetAllAsWoodcutter()
+    {
+        foreach (var creature in creatureList)
+        {
+            if(creature is Creatures.Goblin)
+            {
+                Creatures.Goblin gob = creature as Creatures.Goblin;
+                gob.job._workId = 1;
+            }
+        }
+    }
+
+    private void SetAllAsUnemployed()
+    {
+        foreach (var creature in creatureList)
+        {
+            if (creature is Creatures.Goblin)
+            {
+                Creatures.Goblin gob = creature as Creatures.Goblin;
+                gob.job._workId = 0;
+            }
+        }
+    }
+
     /// <summary>
     /// Selects creature/creatures adding them to creaturelist
     /// </summary>
@@ -124,12 +154,17 @@ public class MouseController : MonoBehaviour
                 creature.ActiveTile = overlayTile;
                 creatureList.Add(creature);
 
-                // Change creature outline color
-                creature.GetComponent<SpriteRenderer>().material.SetColor("_OutlineColor", Color.white);
+                SetOutline(creature);
             }
         }
         catch { }
 
+    }
+
+    public void SetOutline(Creatures.Creature creature)
+    {
+        // Change creature outline color
+        creature.GetComponent<SpriteRenderer>().material.SetColor("_OutlineColor", Color.white);
     }
 
     /// <summary>
