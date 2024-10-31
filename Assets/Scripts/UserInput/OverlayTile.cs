@@ -14,8 +14,9 @@ public class OverlayTile : MonoBehaviour, IHeapItem<OverlayTile>
     // to identify if a character with certain properties can pass on the tile. 
     public bool isBlocked;
 
-    // This is replacement for isBlocked.
+    // Is changed depending on what is on tile (structure, tree, etc.)
     public string tileType;
+
     public bool passable;
     public bool occupied;
 

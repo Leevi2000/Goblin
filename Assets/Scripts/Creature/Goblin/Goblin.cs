@@ -9,8 +9,8 @@ namespace Creatures
 
     public class Goblin : Creature
     {
-        int age;
-        string gender;
+        int age = 0;
+        string gender = "null";
 
         public float sadness = 0.4f;
         public float happiness = 0.4f;
@@ -26,17 +26,34 @@ namespace Creatures
         public float sickness = 0.4f;
 
         int taskId;
+        public bool working = false;
+        public Job job = new Job();
 
-        Dictionary<string, float> proficiencies = new Dictionary<string, float>()
+        [SerializeField] Dictionary<string, float> proficiencies = new Dictionary<string, float>();
+
+        public int Age { get => age; set => age = value; }
+        public string Gender { get => gender; set => gender = value; }
+
+        private void Start()
         {
-            {"woodcutting", 0f },
-            {"mining", 0f },
-            {"foraging", 0f },
-            {"building", 0f },
-            {"combat", 0f }
-        };
+            InitializeProficiencies();
+        }
 
+        /// <summary>
+        /// Initializes proficiency tree with zero proficiency in everything.
+        /// </summary>
+        void InitializeProficiencies()
+        {
+            foreach (var jobName in Jobs.jobList)
+            {
+                proficiencies[jobName] = 0f;
+            }
+            job._workId = 0;
 
+            Debug.Log(job.ToString());
+
+        }
     }
+
 }
 

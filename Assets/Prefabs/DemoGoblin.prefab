@@ -236,6 +236,7 @@ MonoBehaviour:
   cleanliness: 0.4
   sanity: 0.4
   sickness: 0.4
+  working: 0
 --- !u!114 &6294272257098627821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,3 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 6
+  workTimer: 0
+  workTreshold: 10
+  workCooldown: 20
+  coolDownTimer: 0

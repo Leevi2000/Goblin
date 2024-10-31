@@ -60,6 +60,13 @@ public class ExperimentalGoblinSpawner : MonoBehaviour
             //goblinPrefab.GetComponent<Creatures.Creature>().PreviousTile = tiles[x];
             goblin.GetComponent<Creatures.Creature>().TargetTile = tiles[x];
 
+            Names.Goblin nameGen = new Names.Goblin();
+
+            goblin.GetComponent<Creatures.Goblin>().Firstname = nameGen.RandomMale();
+
+            goblin.GetComponent<Creatures.Goblin>().Lastname = nameGen.RandomLast();
+
+
             creatureController.PositionCharacterOnTile(goblin.GetComponent<Creatures.Creature>(), tiles[x]);
 
         }

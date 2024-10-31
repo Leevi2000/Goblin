@@ -9,6 +9,12 @@ public class Logic : MonoBehaviour
     Creatures.Goblin goblinData;
     [SerializeField] float timer = 6;
     float timerStart = 6;
+
+    [SerializeField] float workTimer = 0;
+    [SerializeField] float workTreshold = 10;
+    [SerializeField] float workCooldown = 20;
+    [SerializeField] float coolDownTimer = 0;
+    OverlayTile workTile;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,12 +28,30 @@ public class Logic : MonoBehaviour
 
         if(timer < 0)
         {
+            if (coolDownTimer > workCooldown)
+            {
+                workTimer = 0;
+            }
+
             timer = timerStart + Random.Range(-2f, 2f);
             if(goblinData.PathRequest == false && !goblinData.Moving)
             {
                 SelectAction();
             }
         }    
+
+        if(goblinData.working)
+        {
+            workTimer += Time.fixedDeltaTime;
+            coolDownTimer = 0;
+        }
+        else
+        {
+            //Reset work timer after cooldown to start working again
+            coolDownTimer += Time.fixedDeltaTime;
+            
+        }
+
     }
 
     /// <summary>
@@ -71,12 +95,25 @@ public class Logic : MonoBehaviour
         {
 
         }
+        else if (workTimer < workTreshold)
+        {
+            if(!goblinData.working)
+            {
+                goblinData.working = true;
+                Work(goblinData);
+            }
+        }
         else if (LogicHelper.HappinessThresholdSurpassed(goblinData))
         {
 
         }
         else
             StartRandomWander(goblinData);
+
+        if(workTimer > workTreshold)
+        {
+            goblinData.working = false;
+        }
     }
 
 // Below are the actions goblin can take
@@ -139,6 +176,40 @@ public class Logic : MonoBehaviour
     public void Cry()
     {
 
+    }
+
+    private void Work(Creatures.Goblin goblin)
+    {
+        Debug.Log("Initiating work");
+        if(workTile == null)
+        {
+            GetWorking(goblin);
+        }
+
+        // If goblin is close enough to work site, begin working. 
+        if(TilemapHelper.GetManhattanDistance(goblin.ActiveTile, workTile) < 1)
+        {
+            // If there are other fitting jobs closer, begin working on those instead. (For example when current site depletes)
+            if(workTile != GameObject.Find("GameManager").GetComponent<JobFinder>().ReturnWork(goblin))
+            {
+                GetWorking(goblin);
+            }
+        }
+        else
+        {
+            goblin.TargetTile = workTile;
+            goblin.PathRequest = true;
+        }
+
+        workTile = GameObject.Find("GameManager").GetComponent<JobFinder>().ReturnWork(goblin);
+
+    }
+
+    void GetWorking(Creatures.Goblin goblin)
+    {
+        workTile = GameObject.Find("GameManager").GetComponent<JobFinder>().ReturnWork(goblin);
+        goblin.TargetTile = workTile;
+        goblin.PathRequest = true;
     }
 
     private void StartRandomWander(Creatures.Creature creature)

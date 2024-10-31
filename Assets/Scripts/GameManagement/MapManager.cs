@@ -25,7 +25,7 @@ public class MapManager : MonoBehaviour
             _instance = this;
         }
     }
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -70,6 +70,9 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+        
+        //foreach (var tile in map.Values)
+        //{ Debug.Log(tile.tileType); }
     }
 
     // Update is called once per frame

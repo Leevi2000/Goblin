@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Tilemaps;
 using System;
+using Helper.TilemapOperations;
 
 public class PathFinder : MonoBehaviour
 {
@@ -109,9 +110,9 @@ public class PathFinder : MonoBehaviour
 
                 // Gets distances from start and end points to the neighbour.
                 // 
-                neighbour.G = GetManhattanDistance(start, neighbour);
-                neighbour.H = GetManhattanDistance(end, neighbour);
-
+                neighbour.G = TilemapHelper.GetManhattanDistance(start, neighbour, true);
+                neighbour.H = TilemapHelper.GetManhattanDistance(end, neighbour, true);
+                
                 // Set the previous tile value as current. So backtracking from end point is possible.
                 neighbour.previous = currentOverlayTile;
 
@@ -153,18 +154,18 @@ public class PathFinder : MonoBehaviour
         return finishedList;
     }
     
-    private double GetManhattanDistance(OverlayTile start, OverlayTile neighbour)
-    {
-        // Adds a bit of variation to the chosen path.
-        double randMultiplier = 1;
-        var x = UnityEngine.Random.Range(1, 120);
-        if (x < 2)
-            randMultiplier = UnityEngine.Random.Range(2f, 3f);
+    //public double GetManhattanDistance(OverlayTile start, OverlayTile neighbour)
+    //{
+    //    // Adds a bit of variation to the chosen path.
+    //    double randMultiplier = 1;
+    //    var x = UnityEngine.Random.Range(1, 120);
+    //    if (x < 2)
+    //        randMultiplier = UnityEngine.Random.Range(2f, 3f);
 
-        //int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
-        double dist = randMultiplier * (Math.Sqrt(Math.Pow(start.gridLocation.x - neighbour.gridLocation.x,2) + Math.Pow(start.gridLocation.y - neighbour.gridLocation.y,2)));
-        return dist;
-    }
+    //    //int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
+    //    double dist = randMultiplier * (Math.Sqrt(Math.Pow(start.gridLocation.x - neighbour.gridLocation.x,2) + Math.Pow(start.gridLocation.y - neighbour.gridLocation.y,2)));
+    //    return dist;
+    //}
 
     /// <summary>
     /// Returns the neighbouring tiles in four directions. (left, right, top, bottom)
@@ -274,7 +275,7 @@ public class PathFinder : MonoBehaviour
                         continue;
                     }
 
-                    else if (GetManhattanDistance(startTile, neighbour) < GetManhattanDistance(startTile, closestNeighbour))
+                    else if (TilemapHelper.GetManhattanDistance(startTile, neighbour, true) < TilemapHelper.GetManhattanDistance(startTile, closestNeighbour, true))
                     {
                         closestNeighbour = neighbour;
                     }

@@ -18,6 +18,10 @@ public class Keybinds
 
     public const KeyCode DBG_ENTER_BUILD_MODE = KeyCode.P;
 
+    // UI
+    public const KeyCode OPEN_SELECTED_PANEL = KeyCode.B;
+
+
     [SerializeField]
     public static IDictionary<BUILD, KeyCode> buildingKeybinds = new Dictionary<BUILD, KeyCode>() {
         { BUILD.HOUSE, BUILD_HOUSE},

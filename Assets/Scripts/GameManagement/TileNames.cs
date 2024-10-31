@@ -9,10 +9,10 @@ public class TileNames
     // This way a creature can be easily set to have certain movement types, and
     // tile names will be taken into the needed list by the provided method.
 
-    string[] trees = {
+    public static string[] trees = {
         "tree_1"
     };
-
+    
     string[] lands = {
         "grass", "grass_slab"
     };

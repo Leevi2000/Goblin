@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -66,6 +67,24 @@ namespace Helper.TilemapOperations
             }
 
             return coordinates;
+        }
+
+        public static double GetManhattanDistance(OverlayTile start, OverlayTile neighbour, bool rand = false)
+        {
+            // Adds a bit of variation to the chosen path.
+            double randMultiplier = 1;
+            var x = UnityEngine.Random.Range(1, 120);
+            if (x < 2)
+                randMultiplier = UnityEngine.Random.Range(2f, 3f);
+
+            //int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
+            
+            double dist = (Math.Sqrt(Math.Pow(start.gridLocation.x - neighbour.gridLocation.x, 2) + Math.Pow(start.gridLocation.y - neighbour.gridLocation.y, 2)));
+            if (rand)
+            {
+                 dist = randMultiplier * (Math.Sqrt(Math.Pow(start.gridLocation.x - neighbour.gridLocation.x, 2) + Math.Pow(start.gridLocation.y - neighbour.gridLocation.y, 2)));
+            }
+            return dist;
         }
     }
 }

@@ -9,7 +9,7 @@ public class MouseController : MonoBehaviour
     public List<Creatures.Creature> creatureList = new List<Creatures.Creature>();
 
     // Current tile mouse is hovering on:
-    OverlayTile overlayTile = new OverlayTile();
+    OverlayTile overlayTile;
 
     // Information about raycast from screen to mouse point
     RaycastHit2D? focusedTileHit = null;

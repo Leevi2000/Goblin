@@ -61,7 +61,7 @@ namespace Creatures
 
         }
 
-        private void Start()
+        private void Awake()
         {
             movementTypeTileNames = tileNames.ReturnTilenamesByMovementType(movementTypes);
             timer = timerInitialValue;
@@ -95,6 +95,7 @@ namespace Creatures
 
 
 
+
         public OverlayTile ActiveTile { get => activeTile; set => activeTile = value; }
         public OverlayTile TargetTile { get => targetTile; set => targetTile = value; }
         public OverlayTile PreviousTile { get => previousTile; set => previousTile = value; }
@@ -107,6 +108,8 @@ namespace Creatures
         public float NormalSpeed { get => normalSpeed; set => normalSpeed = value; }
         public bool TimerHit { get => timerHit; set => timerHit = value; }
         public int WanderDistance { get => wanderDistance; set => wanderDistance = value; }
+        public string Firstname { get => firstname; set => firstname = value; }
+        public string Lastname { get => lastname; set => lastname = value; }
     }
 }
 
