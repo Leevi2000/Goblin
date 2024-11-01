@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UI.Paths;
+using System;
 
 namespace UI
 {
@@ -19,24 +20,31 @@ namespace UI
             creatureList = GameObject.Find("UserInput").GetComponentInChildren<MouseController>().creatureList;
         }
 
+        // Main logic for filling UI panels
         private void Update()
         {
+
+            // If pressed to open panel:
             if (Input.GetKeyDown(Keybinds.OPEN_SELECTED_PANEL))
             {
+                // If disabling panel, deselect goblin and empty the right side from the information.
                 if (creatureSelectorCanvas.activeInHierarchy)
                 {
+                    ClearRightSide();
                     creatureSelectorCanvas.SetActive(false);
+                    selectedGoblin = null;
                 }
                 else
                 {
                     creatureSelectorCanvas.SetActive(true);
-                    FillLeftSide(creatureList);
+                    if (creatureList.Count > 0)
+                        FillLeftSide(creatureList);
                 }
             }
 
             if(selectedGoblin != null & creatureSelectorCanvas.activeSelf)
             {
-                FillRightSide(selectedGoblin);
+                UpdateRightSide();
             }
         }
 
@@ -46,9 +54,9 @@ namespace UI
         /// <param name="creatures"></param>
         void FillLeftSide(List<Creatures.Creature> creatures)
         {
-            var containerParent = GameObject.Find("UI_Canvas").transform.Find("CreatureSelector").transform.Find("CreatureSelectorScrollView").transform.Find("Viewport").transform.Find("Content");
+            var containerParent = UI_ElementPathsLeft.LEFT_SIDE_CONTENT_ELEMENT;
 
-            GameObject.Find("UI_Canvas").transform.Find("CreaturesInList").GetComponent<TMPro.TextMeshProUGUI>().text = "Number of creatures in list: " + creatures.Count.ToString();
+            UI_ElementPathsLeft.LEFT_SIDE_LENGTH_TXT_ELEMENT.text = "Number of creatures in list: " + creatures.Count.ToString();
 
             // Destroy previous items/refresh
             foreach (Transform child in containerParent.transform)
@@ -56,47 +64,122 @@ namespace UI
                 Destroy(child.gameObject);
             }
 
+            // Create selectable element for each goblin on list
             foreach (Creatures.Goblin creature in creatures)
             {
-                var infoPanel = Instantiate(creatureSelectorPanelPrefab);
-                infoPanel.transform.SetParent(containerParent);
-                infoPanel.transform.localScale = Vector3.one;
-                var x = infoPanel.GetComponentInChildren<TMPro.TMP_Text>();
-                x.text = creature.Firstname + " " + creature.Lastname;
+                CreateSelectableElement(creature, containerParent);
+            }
 
-                infoPanel.GetComponent<SelectCreature>().Goblin = creature;
+            // Automatically display information of the first goblin on a list
+            if(creatures.Count > 0)
+            {
+                if(creatures[0] is Creatures.Goblin)
+                {
+                    selectedGoblin = creatures[0] as Creatures.Goblin;
+                    FillRightSide(selectedGoblin);
+                }
+                
             }
         }
 
+        void ClearRightSide()
+        {
+            // Get reference to text GameObject
+            TMPro.TextMeshProUGUI textField = UI_ElementPathsRight.RIGHT_SIDE_GENERAL_TXT_ELEMENT;
+
+            var text = "No Goblin Selected";
+            FillText(textField, text);
+
+            var dropDownElement = UI_ElementPathsRight.RIGHT_SIDE_GENERAL_DROPDOWN;
+            //dropDownElement.ClearOptions();
+            dropDownElement.onValueChanged.RemoveAllListeners();
+        }
+
+        /// <summary>
+        /// Adds a selectable goblin to left side of the UI panel and attaches it to the parent gameobject
+        /// </summary>
+        void CreateSelectableElement(Creatures.Goblin creature, Transform parent)
+        {
+            var infoPanel = Instantiate(creatureSelectorPanelPrefab);
+            infoPanel.transform.SetParent(parent);
+            infoPanel.transform.localScale = Vector3.one;
+            var x = infoPanel.GetComponentInChildren<TMPro.TMP_Text>();
+            x.text = creature.Firstname + " " + creature.Lastname;
+
+            infoPanel.GetComponent<SelectCreature>().Goblin = creature;
+        }
+
+
+        /// <summary>
+        /// Fills right side panels with chosen goblin's information
+        /// </summary>
+        /// <param name="goblin"></param>
         public void FillRightSide(Creatures.Goblin goblin)
         {
-            var containerParent = GameObject.Find("UI_Canvas").transform.Find("CreatureSelector").transform.Find("SelectedInfoPanel");
+            selectedGoblin = goblin;
 
-            // Fill General panel
-            var generalPanel = containerParent.Find("GeneralPanel");
-            var textField = generalPanel.Find("GeneralInfo").GetComponent<TMPro.TextMeshProUGUI>();
-            var logic = goblin.gameObject.GetComponent<Logic>();
-            // Fill General Panel text information
-            textField.text =
-                $"Name: {goblin.Firstname} {goblin.Lastname} \n" +
-                $"\t {goblin.Gender}, {goblin.Age} \n \n" +
-                $"Working: {goblin.working} \n \n" +
-                $"Worktimer: {logic.workTimer} of {logic.workTreshold} \n" +
-                $"Freetime: {logic.coolDownTimer} of {logic.workCooldown}";
+            // Get reference to text GameObject
+            var textField = UI_ElementPathsRight.RIGHT_SIDE_GENERAL_TXT_ELEMENT;
+
+            var text = GenerateGeneralText(goblin);
+            FillText(textField, text);
 
             // Fill JobDropDown with correct options
-            var dropDownElement = generalPanel.Find("JobDropDown").GetComponent<TMPro.TMP_Dropdown>();
+            var dropDownElement = UI_ElementPathsRight.RIGHT_SIDE_GENERAL_DROPDOWN;
+            ConfigureJobDropdown(dropDownElement, goblin);
+
+        }
+
+        /// <summary>
+        /// Configures dropdown options with goblin work name and other work possibilities.
+        /// </summary>
+        /// <param name="dropDownElement"></param>
+        /// <param name="goblin"></param>
+        void ConfigureJobDropdown(TMPro.TMP_Dropdown dropDownElement, Creatures.Goblin goblin)
+        {
             dropDownElement.ClearOptions();
 
             //Convert jobList array to list and add them as options
             List<string> jobList = new List<string>(Jobs.jobList);
             dropDownElement.AddOptions(jobList);
 
+
             dropDownElement.onValueChanged.RemoveAllListeners();
             dropDownElement.value = goblin.job._workId;
-
-           
             dropDownElement.onValueChanged.AddListener(delegate { DropdownValueChanged(dropDownElement, goblin); });
+        }
+
+        /// <summary>
+        /// Updates the information about the currently selected goblin.
+        /// </summary>
+        public void UpdateRightSide()
+        {
+            if(selectedGoblin == null)
+            {
+                return;
+            }
+
+            // Get reference to text GameObject
+            var textField = UI_ElementPathsRight.RIGHT_SIDE_GENERAL_TXT_ELEMENT;
+
+            var text = GenerateGeneralText(selectedGoblin);
+            FillText(textField, text);
+        }
+
+        string GenerateGeneralText(Creatures.Goblin goblin)
+        {
+            // Get the chosen goblin's logic script
+            var logic = goblin.gameObject.GetComponent<Logic>();
+
+            // Fill General Panel's text information
+            string text =
+                $"Name: {goblin.Firstname} {goblin.Lastname} \n" +
+                $"\t {goblin.Gender}, {goblin.Age} \n \n" +
+                $"Working: {goblin.working} \n \n" +
+                $"Worktimer: {logic.workTimer} of {logic.workTreshold} \n" +
+                $"Freetime: {logic.coolDownTimer} of {logic.workCooldown}";
+
+            return text;
         }
 
         void DropdownValueChanged(TMPro.TMP_Dropdown change, Creatures.Goblin goblin)
@@ -121,6 +204,11 @@ namespace UI
             mouseController.creatureList.Add(selectedGoblin);
             mouseController.SetOutline(selectedGoblin);
             cam.transform.transform.position = new Vector3(selectedGoblin.transform.position.x - 2, selectedGoblin.transform.position.y, cam.transform.position.z);
+        }
+
+        public void FillText(TMPro.TextMeshProUGUI element, string txt)
+        {
+            element.text = txt;
         }
 
     }
