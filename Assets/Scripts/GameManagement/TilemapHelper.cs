@@ -7,13 +7,20 @@ namespace Helper.TilemapOperations
 {
     public static class TilemapHelper
     {
-        public static List<OverlayTile> GetTilesAroundTarget(OverlayTile overlayTile, int radius)
+        /// <summary>
+        /// Returns a list of tiles around given tile with given square width.
+        /// Main purpose for structure placement.
+        /// </summary>
+        /// <param name="overlayTile"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public static List<OverlayTile> GetTilesAroundTarget(OverlayTile overlayTile, int width)
         {
             var bounds = GameObject.Find("PathFinder").GetComponent<PathFinder>().BOUNDS;
             Dictionary<Vector2Int, OverlayTile> MAP = MapManager.Instance.map;
             List<OverlayTile> tiles = new List<OverlayTile>();
 
-            var tilecoordinates = GenerateSquare(overlayTile.gridLocation.x, overlayTile.gridLocation.y, radius);
+            var tilecoordinates = GenerateSquare(overlayTile.gridLocation.x, overlayTile.gridLocation.y, width);
 
             foreach (var coord in tilecoordinates)
             {   
@@ -30,6 +37,13 @@ namespace Helper.TilemapOperations
             return tiles;
         }
 
+        /// <summary>
+        /// Creates and returns a list of (x,y) coordinates around given coordinate with a specified square width.
+        /// </summary>
+        /// <param name="centerX"></param>
+        /// <param name="centerY"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
         public static List<(int x, int y)> GenerateSquare(int centerX, int centerY, int size)
         {
             List<(int x, int y)> coordinates = new List<(int x, int y)>();
@@ -69,6 +83,15 @@ namespace Helper.TilemapOperations
             return coordinates;
         }
 
+        /// <summary>
+        /// Is actually Euclidean Distance. Mathematics were changed to allow diagonal pathfinding for the creatures.
+        /// Returns distance between two tiles. Rand bool has a chance to manipulate the distance with random chance to 
+        /// allow slight variation in path.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="neighbour"></param>
+        /// <param name="rand"></param>
+        /// <returns></returns>
         public static double GetManhattanDistance(OverlayTile start, OverlayTile neighbour, bool rand = false)
         {
             // Adds a bit of variation to the chosen path.

@@ -153,19 +153,6 @@ public class PathFinder : MonoBehaviour
 
         return finishedList;
     }
-    
-    //public double GetManhattanDistance(OverlayTile start, OverlayTile neighbour)
-    //{
-    //    // Adds a bit of variation to the chosen path.
-    //    double randMultiplier = 1;
-    //    var x = UnityEngine.Random.Range(1, 120);
-    //    if (x < 2)
-    //        randMultiplier = UnityEngine.Random.Range(2f, 3f);
-
-    //    //int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
-    //    double dist = randMultiplier * (Math.Sqrt(Math.Pow(start.gridLocation.x - neighbour.gridLocation.x,2) + Math.Pow(start.gridLocation.y - neighbour.gridLocation.y,2)));
-    //    return dist;
-    //}
 
     /// <summary>
     /// Returns the neighbouring tiles in four directions. (left, right, top, bottom)
@@ -233,8 +220,6 @@ public class PathFinder : MonoBehaviour
 
 
         List<OverlayTile> possibleCandidates = new List<OverlayTile>();
-
-
 
         OverlayTile temporaryTile = new OverlayTile();
         temporaryTile.gridLocation = new Vector3Int(-999, -999, -999);
@@ -317,48 +302,4 @@ public class PathFinder : MonoBehaviour
         return null;
 
     }
-
-    public void ChunkMatrix(int chunkSize, Vector2 offset)
-    {
-
-    }
-
-    /// <summary>
-    /// Checks if creature can traverse from chunk entry point to possible endpoint.
-    /// Between two faces of the chunk with the given movement type.
-    /// </summary>
-    private void CheckChunkPassable(Vector2 chunkPos, int chunkSize, List<string> movementTypes, StructLibrary.ChunkTraverseOrientation movementDirection)
-    {
-        var bounds = GameObject.Find("Grid").GetComponent<MapManager>().GetComponentInChildren<Tilemap>().cellBounds;
-
-        Vector2 offset = new Vector2(0 - bounds.x, 0 - bounds.y);
-
-
-        var centerTileCoordinates = ((chunkPos.x * chunkSize + 1) - offset.x,
-                                     (chunkPos.y * chunkSize + 1) - offset.y);
-
-        //Dictionary<int, int> locationsToLightUp =
-        //{
-        //    ]
-        //};
-
-
-
-        // Check for blocked faces:
-        
-
-
-    }
-
-    /// <summary>
-    /// Returns all neighboring chunks.
-    /// </summary>
-    /// <param name="chunkPos"></param>
-    private void GetNeighbourChunks(Vector2 chunkPos)
-    {
-
-    }
-
-
-
 }

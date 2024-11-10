@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Flexible class for maintaining all buildable structures in the game through Unity.
+/// Purpose is assigning a defined Keybind per structure prefab.
+/// </summary>
 public class StructureSelector : MonoBehaviour
 {
     [System.Serializable]

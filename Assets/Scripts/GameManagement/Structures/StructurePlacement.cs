@@ -70,6 +70,9 @@ public class StructurePlacement : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Changes placeable structures by listening to Keyboard Inputs.
+    /// </summary>
     private void OnGUI()
     {
         bool keyInBinds = false;
@@ -146,6 +149,11 @@ public class StructurePlacement : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Indicates the tiles the structure will be built on.
+    /// Tiles' colors are changed on disallowed building area.
+    /// </summary>
+    /// <param name="structure"></param>
     private void UpdateStructurePlacement(Structure structure)
     {
         bool badTileFound = false;
@@ -158,6 +166,7 @@ public class StructurePlacement : MonoBehaviour
             }
         }
 
+        // Get a list of tiles around cursor. Tile list contains tiles the selected structure would be built on.
         overlayTiles = TilemapHelper.GetTilesAroundTarget(overlayTile, structure.Size);
 
         // If overlayTile count is less than the structure takes space, placement goes over boundaries and shouldn't be placed.
@@ -180,8 +189,9 @@ public class StructurePlacement : MonoBehaviour
         foreach(var tile in overlayTiles)
         {
             if (tile != null)
-            {   
-                if(!CheckIfAllowedTiletype(tile, structure) || tile.gridLocation.z != height) 
+            {
+                // All tiles in a list should be on same level and on an allowed tile type. Preventing building on non-flat ground.
+                if (!CheckIfAllowedTiletype(tile, structure) || tile.gridLocation.z != height) 
                 {
                     tile.SetColor(Color.red);
                     canPlace = false;
@@ -197,6 +207,12 @@ public class StructurePlacement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns true if tiletype fulfills the structure's building requirements.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="structure"></param>
+    /// <returns></returns>
     bool CheckIfAllowedTiletype(OverlayTile tile, Structure structure)
     {
         foreach(var tilename in structure.BuildableTiles)

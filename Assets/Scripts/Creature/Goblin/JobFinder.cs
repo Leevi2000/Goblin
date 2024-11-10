@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Helper.TilemapOperations;
 
+/// <summary>
+/// Holds list of different Jobs for goblins and can be called to give a job location.
+/// </summary>
 public class JobFinder : MonoBehaviour
 {
     float timer = 0;
@@ -16,12 +19,14 @@ public class JobFinder : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        // Getting a reference to a list of MAP tiles to be used in finding Job tiles.
         if (MAP == null)
         {
             MAP = MapManager.Instance.map;
             return;
         }
 
+        // Updates list of jobs in 5 second intervals
         if (timer < 0)
         {
             UpdateJobs();
@@ -33,6 +38,9 @@ public class JobFinder : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates a lists of different Jobs. Goes through all game tiles.
+    /// </summary>
     void UpdateJobs()
     {
         woodcutterJobs.Clear();
@@ -43,17 +51,19 @@ public class JobFinder : MonoBehaviour
             // Add tile to woodcutter jobs if tiletype is tree
             foreach(string tilename in TileNames.trees)
             {
-                
-
                 if (tile.tileType.Contains(tilename))
                     woodcutterJobs.Add(tile);
                 break;
             }
 
         }
-             //   if(tile.tileType in trees[])
     }
 
+    /// <summary>
+    /// Returns a job tile depending on a given goblins Job and position.
+    /// </summary>
+    /// <param name="goblin"></param>
+    /// <returns></returns>
     public OverlayTile ReturnWork(Creatures.Goblin goblin)
     {
         switch(goblin.job.GetJobName())
@@ -67,7 +77,12 @@ public class JobFinder : MonoBehaviour
         return null;
     }
 
-    // Returns closest job 
+    /// <summary>
+    /// Returns closest Job tile on the list to the given tile
+    /// </summary>
+    /// <param name="tiles"></param>
+    /// <param name="currentTile"></param>
+    /// <returns></returns>
     OverlayTile ReturnClosest(List<OverlayTile> tiles, OverlayTile currentTile)
     {
         if(tiles.Count == 0)

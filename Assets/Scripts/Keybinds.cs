@@ -10,7 +10,7 @@ public class Keybinds
     public const KeyCode BUILD_HOUSE = KeyCode.Q;
     public const KeyCode BUILD_STORAGE = KeyCode.E;
 
-    // THESE ARE FOR UNITY ISNPECTOR DRAG N DROP 
+    // THESE ARE FOR UNITY INSPECTOR DRAG N DROP 
     BUILD house = BUILD.HOUSE;
     BUILD storage = BUILD.STORAGE;
 
