@@ -56,9 +56,10 @@ namespace Creatures
 
         }
 
-        void MoveTo(OverlayTile tile)
+        public void MoveTo(OverlayTile tile)
         {
-
+            targetTile = tile;
+            pathRequest = true;
         }
 
         private void Awake()
@@ -92,8 +93,6 @@ namespace Creatures
             }
 
         }
-
-
 
 
         public OverlayTile ActiveTile { get => activeTile; set => activeTile = value; }

@@ -22,6 +22,13 @@ public class Keybinds
     public const KeyCode OPEN_SELECTED_PANEL = KeyCode.B;
 
 
+    public const KeyCode SELECT_CREATURE = KeyCode.Mouse0;
+    public const KeyCode MOVE_SELECTED_CREATURES = KeyCode.Mouse1;
+    public const KeyCode SELECT_ALL_CREATURES = KeyCode.Z;
+    public const KeyCode SET_SELECTED_AS_WOODCUTTER = KeyCode.X;
+    public const KeyCode SET_ALL_AS_UNEMPLOYED = KeyCode.C;
+
+
     [SerializeField]
     public static IDictionary<BUILD, KeyCode> buildingKeybinds = new Dictionary<BUILD, KeyCode>() {
         { BUILD.HOUSE, BUILD_HOUSE},

@@ -135,7 +135,7 @@ public class MouseController : MonoBehaviour
     /// <summary>
     /// Selects creature/creatures adding them to creaturelist
     /// </summary>
-    private void SelectCreature()
+    public void SelectCreature()
     {
 
         if (!Input.GetKey(KeyCode.LeftShift))
@@ -182,14 +182,13 @@ public class MouseController : MonoBehaviour
     }
 
     
-    private void MoveSelected()
+    public void MoveSelected()
     {
         overlayTile.ShowTile();
 
         foreach (var creature in creatureList)
         {
-            creature.TargetTile = overlayTile;
-            creature.PathRequest = true;
+            creature.MoveTo(overlayTile);
         }
     }
 }

@@ -96,9 +96,11 @@ namespace Helper.TilemapOperations
         {
             // Adds a bit of variation to the chosen path.
             double randMultiplier = 1;
-            var x = UnityEngine.Random.Range(1, 120);
+            var rnd = new System.Random();
+            var x = rnd.Next(1, 121);
+            //var x = UnityEngine.Random.Range(1, 120);
             if (x < 2)
-                randMultiplier = UnityEngine.Random.Range(2f, 3f);
+                randMultiplier = rnd.Next(2, 3);
 
             //int dist = Convert.ToInt16(randMultiplier * (Math.Abs(start.gridLocation.x - neighbour.gridLocation.x) + Math.Abs(start.gridLocation.y - neighbour.gridLocation.y)));
             

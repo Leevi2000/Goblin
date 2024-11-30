@@ -44,8 +44,6 @@ public class MapManager : MonoBehaviour
                     var tileKey = new Vector2Int(x, y);
                     if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
-
-
                         var overlayTile = Instantiate(overlayTilePrefab, overlayContainer.transform);
                         var cellWorldPosition = tileMap.GetCellCenterWorld(tileLocation);
 
@@ -70,9 +68,6 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
-        
-        //foreach (var tile in map.Values)
-        //{ Debug.Log(tile.tileType); }
     }
 
     // Update is called once per frame

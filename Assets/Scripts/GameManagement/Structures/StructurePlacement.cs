@@ -118,6 +118,9 @@ public class StructurePlacement : MonoBehaviour
     /// <param name="occupiedTiles"></param>
     void PlaceStructure(Structure structure, List<OverlayTile> occupiedTiles)
     {
+        //NOTE: There should be an reference to a structure on a Tile?
+
+
         OverlayTile bottomTile = occupiedTiles[0];
 
         foreach(var tile in overlayTiles)
